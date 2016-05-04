@@ -8,7 +8,6 @@ import (
 func main() {
     config := getConfig()
     dataPath := config.getDataPath()
-    fmt.Println(dataPath)
     pathToAdd := flag.String("add", "", "Add this path")
     flag.Parse()
     if *pathToAdd != "" {

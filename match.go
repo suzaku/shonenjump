@@ -8,22 +8,28 @@ import (
     "regexp"
 )
 
+func firstValidPath(paths []string) string {
+    for _, p := range paths {
+        if _, err := os.Stat(p); os.IsNotExist(err) {
+            continue
+        }
+        return p
+    }
+    return ""
+}
+
+type matcher func([]*Entry, []string) []string
+
 func bestGuess(entries []*Entry, args []string) string {
-    paths := matchConsecutive(entries, args)
-    if len(paths) > 0 {
-        return paths[0]
+    matchers := []matcher{matchConsecutive, matchFuzzy, matchAnywhere}
+    for _, m := range matchers {
+        paths := m(entries, args)
+        if len(paths) > 0 {
+            if path := firstValidPath(paths); path != "" {
+                return path
+            }
+        }
     }
-
-    paths = matchFuzzy(entries, args)
-    if len(paths) > 0 {
-        return paths[0]
-    }
-
-    paths = matchAnywhere(entries, args)
-    if len(paths) > 0 {
-        return paths[0]
-    }
-
     return "."
 }
 
