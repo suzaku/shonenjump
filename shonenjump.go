@@ -12,6 +12,7 @@ import (
     "math"
     "bytes"
     "path/filepath"
+    "flag"
 )
 
 func saveEntries(entries []*Entry, path string) {
@@ -129,13 +130,17 @@ func loadEntries(path string) []*Entry {
 }
 
 func main() {
-    dataPath := "/tmp/data.txt"
-    entries := loadEntries(dataPath)
-    path := "/tmp/"
-    weight := 10.0
+    pathToAdd := flag.String("add", "", "Add this path")
+    flag.Parse()
+    if *pathToAdd != "" {
+        dataPath := "/tmp/shonenjump.txt"
+        entries := loadEntries(dataPath)
+        weight := 10.0
 
-    entries = updateEntriesWithPath(entries, path, weight)
+        entries = updateEntriesWithPath(entries, *pathToAdd, weight)
 
-    destPath := "/tmp/abc/shonenjump.txt"
-    saveEntries(entries, destPath)
+        saveEntries(entries, dataPath)
+    } else {
+        flag.Usage()
+    }
 }
