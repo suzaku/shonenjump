@@ -12,6 +12,7 @@ import (
 )
 
 func updateEntriesWithPath(entries []*Entry, path string, weight float64) []*Entry {
+    path = strings.TrimSuffix(path, string(os.PathSeparator))
     var entry *Entry
     for _, e := range entries {
         if e.Path == path {
@@ -93,7 +94,7 @@ func loadEntries(path string) []*Entry {
 func main() {
     dataPath := "/Users/satoru/Library/autojump/autojump.txt"
     entries := loadEntries(dataPath)
-    path := "/tmp"
+    path := "/tmp/"
     weight := 10.0
 
     entries = updateEntriesWithPath(entries, path, weight)
