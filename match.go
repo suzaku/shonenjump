@@ -5,6 +5,7 @@ import (
     "os"
     "path/filepath"
     "github.com/renstrom/fuzzysearch/fuzzy"
+    "regexp"
 )
 
 func bestGuess(entries []*Entry, args []string) string {
@@ -18,7 +19,12 @@ func bestGuess(entries []*Entry, args []string) string {
         return paths[0]
     }
 
-    return ""
+    paths = matchAnywhere(entries, args)
+    if len(paths) > 0 {
+        return paths[0]
+    }
+
+    return "."
 }
 
 func matchConsecutive(entries []*Entry, args []string) []string {
@@ -56,5 +62,25 @@ func matchFuzzy(entries []*Entry, args []string) []string {
             matches = append(matches, e.Path)
         }
     }
+    return matches
+}
+
+func matchAnywhere(entries []*Entry, args []string) []string {
+    var matches []string
+    any := ".*"
+    regexParts := []string{"(?i)", any, strings.Join(args, any), any}
+    regex := strings.Join(regexParts, "")
+    pattern, err := regexp.Compile(regex)
+
+    if err != nil {
+        return matches
+    }
+
+    for _, e := range entries {
+        if pattern.Match([]byte(e.Path)) {
+            matches = append(matches, e.Path)
+        }
+    }
+
     return matches
 }
