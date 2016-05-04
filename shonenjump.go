@@ -98,14 +98,17 @@ func sortEntriesByScore(entries []*Entry) {
 }
 
 func loadEntries(path string) []*Entry {
+    var entries []*Entry
     file, err := os.Open(path)
     if err != nil {
-        log.Fatal("Failed to open data file")
+        if os.IsNotExist(err) {
+            return entries
+        }
+        log.Fatal(err)
     }
     defer file.Close()
 
     scanner := bufio.NewScanner(file)
-    var entries []*Entry
     for scanner.Scan() {
         line := scanner.Text()
         entry, err := parseEntry(line)
@@ -119,7 +122,7 @@ func loadEntries(path string) []*Entry {
 }
 
 func main() {
-    dataPath := "/Users/satoru/Library/autojump/autojump.txt"
+    dataPath := "/tmp/data.txt"
     entries := loadEntries(dataPath)
     path := "/tmp/"
     weight := 10.0
