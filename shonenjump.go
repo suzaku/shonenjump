@@ -11,10 +11,11 @@ import (
     "sort"
     "math"
     "bytes"
+    "path/filepath"
 )
 
 func saveEntries(entries []*Entry, path string) {
-    tempfile, err := ioutil.TempFile("", "")
+    tempfile, err := ioutil.TempFile("", "shonenjump")
     if err != nil {
         log.Fatal(err)
     }
@@ -31,7 +32,13 @@ func saveEntries(entries []*Entry, path string) {
         log.Fatal(err)
     }
 
-    os.Rename(tempfile.Name(), path)
+    if err = os.MkdirAll(filepath.Dir(path), 0740); err != nil {
+        log.Fatal(err)
+    }
+
+    if err = os.Rename(tempfile.Name(), path); err != nil {
+        log.Fatal(err)
+    }
 }
 
 func updateEntriesWithPath(entries []*Entry, path string, weight float64) []*Entry {
@@ -129,6 +136,6 @@ func main() {
 
     entries = updateEntriesWithPath(entries, path, weight)
 
-    destPath := "/tmp/shonenjump.txt"
+    destPath := "/tmp/abc/shonenjump.txt"
     saveEntries(entries, destPath)
 }
