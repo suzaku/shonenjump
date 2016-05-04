@@ -43,8 +43,11 @@ func saveEntries(entries []*Entry, path string) {
 }
 
 func updateEntriesWithPath(entries []*Entry, path string, weight float64) []*Entry {
-    // TODO use absolute path
     path = strings.TrimSuffix(path, string(os.PathSeparator))
+    path, err := filepath.Abs(path)
+    if err != nil {
+        log.Fatal(err)
+    }
     var entry *Entry
     for _, e := range entries {
         if e.Path == path {
