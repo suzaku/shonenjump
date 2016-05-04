@@ -8,29 +8,22 @@ import (
     "regexp"
 )
 
-func firstValidPath(paths []string) string {
-    for _, p := range paths {
-        if _, err := os.Stat(p); os.IsNotExist(err) {
-            continue
-        }
-        return p
+func isValidPath(p string) bool {
+    if _, err := os.Stat(p); os.IsNotExist(err) {
+        return false
     }
-    return ""
+    return true
 }
 
 type matcher func([]*Entry, []string) []string
 
 func bestGuess(entries []*Entry, args []string) string {
-    matchers := []matcher{matchConsecutive, matchFuzzy, matchAnywhere}
-    for _, m := range matchers {
-        paths := m(entries, args)
-        if len(paths) > 0 {
-            if path := firstValidPath(paths); path != "" {
-                return path
-            }
-        }
+    candidates := getCandidates(entries, args, 1)
+    if len(candidates) > 0 {
+        return candidates[0]
+    } else {
+        return "."
     }
-    return "."
 }
 
 func matchConsecutive(entries []*Entry, args []string) []string {
@@ -89,4 +82,24 @@ func matchAnywhere(entries []*Entry, args []string) []string {
     }
 
     return matches
+}
+
+func getCandidates(entries []*Entry, args []string, limit int) []string {
+    var candidates []string
+    matchers := []matcher{matchConsecutive, matchFuzzy, matchAnywhere}
+    for _, m := range matchers {
+        paths := m(entries, args)
+        if len(paths) > 0 {
+            for _, p := range paths {
+                if !isValidPath(p) {
+                    continue
+                }
+                candidates = append(candidates, p)
+                if len(candidates) >= limit {
+                    return candidates
+                }
+            }
+        }
+    }
+    return candidates
 }
