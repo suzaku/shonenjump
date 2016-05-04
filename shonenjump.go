@@ -43,6 +43,7 @@ func saveEntries(entries []*Entry, path string) {
 }
 
 func updateEntriesWithPath(entries []*Entry, path string, weight float64) []*Entry {
+    // TODO use absolute path
     path = strings.TrimSuffix(path, string(os.PathSeparator))
     var entry *Entry
     for _, e := range entries {
@@ -130,16 +131,20 @@ func loadEntries(path string) []*Entry {
 }
 
 func main() {
+    dataPath := "/tmp/shonenjump.txt"
     pathToAdd := flag.String("add", "", "Add this path")
     flag.Parse()
     if *pathToAdd != "" {
-        dataPath := "/tmp/shonenjump.txt"
         entries := loadEntries(dataPath)
         weight := 10.0
 
         entries = updateEntriesWithPath(entries, *pathToAdd, weight)
 
         saveEntries(entries, dataPath)
+    } else if flag.NArg() > 0 {
+        args := flag.Args()
+        entries := loadEntries(dataPath)
+        fmt.Println(bestGuess(entries, args))
     } else {
         flag.Usage()
     }
