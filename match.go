@@ -3,15 +3,22 @@ package main
 import (
     "strings"
     "os"
+    "path/filepath"
+    "github.com/renstrom/fuzzysearch/fuzzy"
 )
 
 func bestGuess(entries []*Entry, args []string) string {
     paths := matchConsecutive(entries, args)
     if len(paths) > 0 {
         return paths[0]
-    } else {
-        return ""
     }
+
+    paths = matchFuzzy(entries, args)
+    if len(paths) > 0 {
+        return paths[0]
+    }
+
+    return ""
 }
 
 func matchConsecutive(entries []*Entry, args []string) []string {
@@ -30,6 +37,24 @@ func matchConsecutive(entries []*Entry, args []string) []string {
             }
         }
         matches = append(matches, e.Path)
+    }
+    return matches
+}
+
+func matchFuzzy(entries []*Entry, args []string) []string {
+    var matches []string
+    // Only match the last part
+    arg := args[len(args) - 1]
+    distanceThreshold := len(arg) * 2
+    for _, e := range entries {
+        _, lastPart := filepath.Split(e.Path)
+        rank := fuzzy.RankMatch(arg, lastPart)
+        if rank == -1 {
+            continue
+        }
+        if rank < distanceThreshold {
+            matches = append(matches, e.Path)
+        }
     }
     return matches
 }
