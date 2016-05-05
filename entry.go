@@ -14,6 +14,18 @@ import (
     "path/filepath"
 )
 
+func clearNotExistDirs(entries []*Entry) []*Entry {
+    var cleared []*Entry
+    for _, e := range entries {
+        if isValidPath(e.Path) {
+            cleared = append(cleared, e)
+        } else {
+            log.Printf("Directory %s no longer exists", e.Path)
+        }
+    }
+    return cleared
+}
+
 func saveEntries(entries []*Entry, path string) {
     tempfile, err := ioutil.TempFile("", "shonenjump")
     if err != nil {

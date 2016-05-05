@@ -40,6 +40,7 @@ func main() {
 	dataPath := config.getDataPath()
 	pathToAdd := flag.String("add", "", "Add this path")
 	complete := flag.Bool("complete", false, "Used for tab completion")
+    purge := flag.Bool("purge", false, "Remove non-existent paths from database")
 	flag.Parse()
 	if *pathToAdd != "" {
 		entries := loadEntries(dataPath)
@@ -73,6 +74,10 @@ func main() {
 				fmt.Println(strings.Join(parts, separator))
 			}
 		}
+    } else if *purge {
+        entries := loadEntries(dataPath)
+        entries = clearNotExistDirs(entries)
+		saveEntries(entries, dataPath)
 	} else if flag.NArg() > 0 {
 		args := flag.Args()
 		entries := loadEntries(dataPath)

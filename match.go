@@ -8,7 +8,7 @@ import (
     "regexp"
 )
 
-func isValidPath(p string) bool {
+var isValidPath = func(p string) bool {
     if _, err := os.Stat(p); os.IsNotExist(err) {
         return false
     }
