@@ -12,8 +12,8 @@ Quote from the description of [autojump](https://github.com/wting/autojump/):
 
 # Installation
 
-1. Download the shonenjump binary for your platform, place it in a directory in your `$PATH`.
-1. Download the setup [script](https://github.com/suzaku/shonenjump/blob/master/scripts/) for your shell and include it in your shell profile.
+1. [Download](https://github.com/suzaku/shonenjump/releases) the shonenjump binary for your platform, place it in a directory in your `$PATH`.
+1. [Download](https://github.com/suzaku/shonenjump/blob/master/scripts/) the setup script for your shell and include it in your shell profile.
 
    For example, if you are using `zsh`, you can do the following:
     
