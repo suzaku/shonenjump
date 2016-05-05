@@ -1,4 +1,4 @@
-# Shonenjump
+# Shonenjump [![Build Status](https://travis-ci.org/suzaku/shonenjump.svg?branch=master)](https://travis-ci.org/suzaku/shonenjump)
 
 shonenjump is a lightweight autojump clone written in Go.
 
