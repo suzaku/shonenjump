@@ -37,7 +37,10 @@ func matchConsecutive(entries []*Entry, args []string) []string {
         for i, j := len(parts)-1, nArgs-1;
             i >= 0 && j >= 0;
             i, j = i-1, j-1 {
-            if !strings.Contains(parts[i], args[j]) {
+            if !strings.Contains(
+                strings.ToLower(parts[i]),
+                strings.ToLower(args[j]),
+            ) {
                 continue loop_entries
             }
         }
