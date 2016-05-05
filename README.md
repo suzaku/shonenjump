@@ -32,4 +32,6 @@ Quote from the description of [autojump](https://github.com/wting/autojump/):
 
 # Usage
 
-Usage is the same as [autojump](https://github.com/wting/autojump/#usage)
+Usage is similar to [autojump](https://github.com/wting/autojump/#usage).
+
+This section will be updated if different behaviors were to be added in the future.
