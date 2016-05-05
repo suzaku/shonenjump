@@ -8,6 +8,7 @@ import (
 )
 
 const separator = "__"
+const maxCompleteOptions = 9
 
 func parseCompleteOption(s string) (string, int, string) {
 	needle := ""
@@ -66,7 +67,7 @@ func main() {
 			}
 		} else {
 			entries := loadEntries(dataPath)
-			candidates := getCandidates(entries, []string{needle}, 9)
+			candidates := getCandidates(entries, []string{needle}, maxCompleteOptions)
 			for i, path := range candidates {
 				parts := []string{needle, strconv.Itoa(i + 1), path}
 				fmt.Println(strings.Join(parts, separator))
