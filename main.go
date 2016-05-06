@@ -108,9 +108,12 @@ func main() {
 				path = getNCandidate([]string{needle}, index, ".")
 				fmt.Println(path)
 				return
+			} else {
+				fmt.Println(bestGuess(entries, []string{needle}))
 			}
+		} else {
+			fmt.Println(bestGuess(entries, args))
 		}
-		fmt.Println(bestGuess(entries, args))
 	} else {
 		flag.Usage()
 	}
