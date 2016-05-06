@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os/user"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -10,7 +12,16 @@ import (
 const separator = "__"
 const maxCompleteOptions = 9
 
-func getNCandidate(dataPath string, args []string, index int, defaultPath string) string {
+var dataPath string
+
+func init() {
+	usr, _ := user.Current()
+	dir := filepath.Join(usr.HomeDir, ".local/share/shonenjump")
+
+	dataPath = filepath.Join(dir, "shonenjump.txt")
+}
+
+func getNCandidate(args []string, index int, defaultPath string) string {
 	entries := loadEntries(dataPath)
 	candidates := getCandidates(entries, args, index)
 	if len(candidates) == index {
@@ -45,8 +56,6 @@ func parseCompleteOption(s string) (string, int, string) {
 }
 
 func main() {
-	config := getConfig()
-	dataPath := config.getDataPath()
 	pathToAdd := flag.String("add", "", "Add this path")
 	complete := flag.Bool("complete", false, "Used for tab completion")
 	purge := flag.Bool("purge", false, "Remove non-existent paths from database")
@@ -70,7 +79,7 @@ func main() {
 		if path != "" {
 			fmt.Println(path)
 		} else if index != 0 {
-			path = getNCandidate(dataPath, []string{needle}, index, "")
+			path = getNCandidate([]string{needle}, index, "")
 			if path != "" {
 				fmt.Println(path)
 			}
@@ -96,7 +105,7 @@ func main() {
 				fmt.Println(path)
 				return
 			} else if index != 0 {
-				path = getNCandidate(dataPath, []string{needle}, index, ".")
+				path = getNCandidate([]string{needle}, index, ".")
 				fmt.Println(path)
 				return
 			}
