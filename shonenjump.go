@@ -10,6 +10,15 @@ import (
 const separator = "__"
 const maxCompleteOptions = 9
 
+func getNCandidate(dataPath string, args []string, index int, defaultPath string) string {
+	entries := loadEntries(dataPath)
+	candidates := getCandidates(entries, args, index)
+	if len(candidates) == index {
+		return candidates[index-1]
+	}
+	return defaultPath
+}
+
 func parseCompleteOption(s string) (string, int, string) {
 	needle := ""
 	index := 0
@@ -40,7 +49,7 @@ func main() {
 	dataPath := config.getDataPath()
 	pathToAdd := flag.String("add", "", "Add this path")
 	complete := flag.Bool("complete", false, "Used for tab completion")
-    purge := flag.Bool("purge", false, "Remove non-existent paths from database")
+	purge := flag.Bool("purge", false, "Remove non-existent paths from database")
 	flag.Parse()
 	if *pathToAdd != "" {
 		entries := loadEntries(dataPath)
@@ -61,10 +70,9 @@ func main() {
 		if path != "" {
 			fmt.Println(path)
 		} else if index != 0 {
-			entries := loadEntries(dataPath)
-			candidates := getCandidates(entries, []string{needle}, index)
-			if len(candidates) == index {
-				fmt.Println(candidates[index-1])
+			path = getNCandidate(dataPath, []string{needle}, index, "")
+			if path != "" {
+				fmt.Println(path)
 			}
 		} else {
 			entries := loadEntries(dataPath)
@@ -74,13 +82,25 @@ func main() {
 				fmt.Println(strings.Join(parts, separator))
 			}
 		}
-    } else if *purge {
-        entries := loadEntries(dataPath)
-        entries = clearNotExistDirs(entries)
+	} else if *purge {
+		entries := loadEntries(dataPath)
+		entries = clearNotExistDirs(entries)
 		saveEntries(entries, dataPath)
 	} else if flag.NArg() > 0 {
-		args := flag.Args()
 		entries := loadEntries(dataPath)
+
+		args := flag.Args()
+		if len(args) == 1 {
+			needle, index, path := parseCompleteOption(args[0])
+			if path != "" {
+				fmt.Println(path)
+				return
+			} else if index != 0 {
+				path = getNCandidate(dataPath, []string{needle}, index, ".")
+				fmt.Println(path)
+				return
+			}
+		}
 		fmt.Println(bestGuess(entries, args))
 	} else {
 		flag.Usage()
