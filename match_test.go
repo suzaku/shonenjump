@@ -51,10 +51,10 @@ func TestGetCandidates(t *testing.T) {
 
 func TestAnywhere(t *testing.T) {
 	entries := []*Entry{
-		&Entry{"/foo/bar/baz", 10},
-		&Entry{"/foo/bazar", 10},
-		&Entry{"/tmp", 10},
-		&Entry{"/foo/gxxbazabc", 10},
+		{"/foo/bar/baz", 10},
+		{"/foo/bazar", 10},
+		{"/tmp", 10},
+		{"/foo/gxxbazabc", 10},
 	}
 	result := matchAnywhere(entries, []string{"foo", "baz"})
 	expected := []string{
@@ -67,10 +67,10 @@ func TestAnywhere(t *testing.T) {
 
 func TestFuzzy(t *testing.T) {
 	entries := []*Entry{
-		&Entry{"/foo/bar/baz", 10},
-		&Entry{"/foo/bazar", 10},
-		&Entry{"/tmp", 10},
-		&Entry{"/foo/gxxbazabc", 10},
+		{"/foo/bar/baz", 10},
+		{"/foo/bazar", 10},
+		{"/tmp", 10},
+		{"/foo/gxxbazabc", 10},
 	}
 	result := matchFuzzy(entries, []string{"baz"})
 	expected := []string{
@@ -82,11 +82,11 @@ func TestFuzzy(t *testing.T) {
 
 func TestConsecutive(t *testing.T) {
 	entries := []*Entry{
-		&Entry{"/foo/bar/baz", 10},
-		&Entry{"/foo/baz/moo", 10},
-		&Entry{"/moo/foo/Baz", 10},
-		&Entry{"/foo/bazar", 10},
-		&Entry{"/foo/xxbaz", 10},
+		{"/foo/bar/baz", 10},
+		{"/foo/baz/moo", 10},
+		{"/moo/foo/Baz", 10},
+		{"/foo/bazar", 10},
+		{"/foo/xxbaz", 10},
 	}
 	result := matchConsecutive(entries, []string{"foo", "baz"})
 	expected := []string{

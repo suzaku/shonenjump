@@ -24,10 +24,10 @@ func TestClearNotExistDirs(t *testing.T) {
 		return !strings.HasSuffix(p, "not-exist")
 	}
 	entries := []*Entry{
-		&Entry{"/foo/bar", 10},
-		&Entry{"/foo/not-exist", 10},
-		&Entry{"/tmp", 10},
-		&Entry{"/not-exist", 10},
+		{"/foo/bar", 10},
+		{"/foo/not-exist", 10},
+		{"/tmp", 10},
+		{"/not-exist", 10},
 	}
 	result := clearNotExistDirs(entries)
 	var output []string
