@@ -136,7 +136,8 @@ func loadEntries(path string) []*Entry {
 		line := scanner.Text()
 		entry, err := parseEntry(line)
 		if err != nil {
-			fmt.Errorf("Failed to parse score from line: %v", line)
+			log.Printf("Failed to parse score from line: %v", line)
+			continue
 		}
 		entries = append(entries, &entry)
 	}
