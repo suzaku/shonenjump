@@ -78,6 +78,7 @@ func updateEntriesWithPath(entries []*Entry, path string, weight float64) []*Ent
 	return entries
 }
 
+// Entry correspond to a line in the data file
 type Entry struct {
 	Path  string
 	Score float64
@@ -92,17 +93,17 @@ func (e Entry) String() string {
 	return fmt.Sprintf("%f\t%s", e.Score, e.Path)
 }
 
-type ByScore []*Entry
+type byScore []*Entry
 
-func (a ByScore) Len() int {
+func (a byScore) Len() int {
 	return len(a)
 }
 
-func (a ByScore) Swap(i, j int) {
+func (a byScore) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
 }
 
-func (a ByScore) Less(i, j int) bool {
+func (a byScore) Less(i, j int) bool {
 	return a[i].Score < a[j].Score
 }
 
@@ -117,7 +118,7 @@ func parseEntry(s string) (entry Entry, err error) {
 }
 
 func sortEntriesByScore(entries []*Entry) {
-	sort.Sort(sort.Reverse(ByScore(entries)))
+	sort.Sort(sort.Reverse(byScore(entries)))
 }
 
 func loadEntries(path string) []*Entry {

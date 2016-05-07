@@ -21,9 +21,8 @@ func bestGuess(entries []*Entry, args []string) string {
 	candidates := getCandidates(entries, args, 1)
 	if len(candidates) > 0 {
 		return candidates[0]
-	} else {
-		return "."
 	}
+	return "."
 }
 
 func matchConsecutive(entries []*Entry, args []string) []string {
