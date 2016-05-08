@@ -23,6 +23,30 @@ func BenchmarkGetCandidates(b *testing.B) {
 	}
 }
 
+func TestGetCandidatesShouldRemoveDuplication(t *testing.T) {
+	orig := isValidPath
+	defer func() { isValidPath = orig }()
+	isValidPath = func(p string) bool {
+		return true
+	}
+
+	orig1, orig2, orig3 := matchConsecutive, matchFuzzy, matchAnywhere
+	var dummyMatcher = func(entries []*Entry, args []string) []string {
+		return []string{"path1", "path2"}
+	}
+	matchConsecutive = dummyMatcher
+	matchFuzzy = dummyMatcher
+	matchAnywhere = dummyMatcher
+	defer func() {
+		matchConsecutive, matchFuzzy, matchAnywhere = orig1, orig2, orig3
+	}()
+
+	entries := []*Entry{&Entry{"path1", 10}}
+	result := getCandidates(entries, []string{"foo"}, 4)
+	expected := []string{"path1", "path2"}
+	assertItemsEqual(t, result, expected)
+}
+
 func TestGetCandidates(t *testing.T) {
 	orig := isValidPath
 	defer func() { isValidPath = orig }()

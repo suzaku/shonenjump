@@ -25,7 +25,7 @@ func bestGuess(entries []*Entry, args []string) string {
 	return "."
 }
 
-func matchConsecutive(entries []*Entry, args []string) []string {
+var matchConsecutive = func(entries []*Entry, args []string) []string {
 	nArgs := len(args)
 	var matches []string
 
@@ -46,7 +46,7 @@ loop_entries:
 	return matches
 }
 
-func matchFuzzy(entries []*Entry, args []string) []string {
+var matchFuzzy = func(entries []*Entry, args []string) []string {
 	var matches []string
 	// Only match the last part
 	arg := args[len(args)-1]
@@ -64,7 +64,7 @@ func matchFuzzy(entries []*Entry, args []string) []string {
 	return matches
 }
 
-func matchAnywhere(entries []*Entry, args []string) []string {
+var matchAnywhere = func(entries []*Entry, args []string) []string {
 	var matches []string
 	any := ".*"
 	regexParts := []string{"(?i)", any, strings.Join(args, any), any}
@@ -86,15 +86,17 @@ func matchAnywhere(entries []*Entry, args []string) []string {
 
 func getCandidates(entries []*Entry, args []string, limit int) []string {
 	var candidates []string
+	seen := make(map[string]bool)
 	matchers := []matcher{matchConsecutive, matchFuzzy, matchAnywhere}
 	for _, m := range matchers {
 		paths := m(entries, args)
 		if len(paths) > 0 {
 			for _, p := range paths {
-				if !isValidPath(p) {
+				if seen[p] || !isValidPath(p) {
 					continue
 				}
 				candidates = append(candidates, p)
+				seen[p] = true
 				if len(candidates) >= limit {
 					return candidates
 				}
