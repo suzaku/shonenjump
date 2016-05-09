@@ -5,6 +5,13 @@ import (
 	"testing"
 )
 
+func TestString(t *testing.T) {
+	e := &Entry{"/etc/init", 10.1234}
+	if e.String() != "10.12\t/etc/init" {
+		t.Errorf("Wrong string representation: %s", e.String())
+	}
+}
+
 func TestUpdateEntryScore(t *testing.T) {
 	e := &Entry{"/etc/init", 0}
 	e.updateScore(10)

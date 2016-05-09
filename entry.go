@@ -90,7 +90,7 @@ func (e *Entry) updateScore(weight float64) float64 {
 }
 
 func (e Entry) String() string {
-	return fmt.Sprintf("%f\t%s", e.Score, e.Path)
+	return fmt.Sprintf("%.2f\t%s", e.Score, e.Path)
 }
 
 type byScore []*Entry
