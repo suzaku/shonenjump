@@ -14,8 +14,8 @@ import (
 	"strings"
 )
 
-func clearNotExistDirs(entries []*Entry) []*Entry {
-	var cleared []*Entry
+func clearNotExistDirs(entries []*entry) []*entry {
+	var cleared []*entry
 	for _, e := range entries {
 		if isValidPath(e.Path) {
 			cleared = append(cleared, e)
@@ -26,7 +26,7 @@ func clearNotExistDirs(entries []*Entry) []*Entry {
 	return cleared
 }
 
-func saveEntries(entries []*Entry, path string) {
+func saveEntries(entries []*entry, path string) {
 	tempfile, err := ioutil.TempFile("", "shonenjump")
 	if err != nil {
 		log.Fatal(err)
@@ -53,25 +53,25 @@ func saveEntries(entries []*Entry, path string) {
 	}
 }
 
-func updateEntriesWithPath(entries []*Entry, path string, weight float64) []*Entry {
+func updateEntriesWithPath(entries []*entry, path string, weight float64) []*entry {
 	path = strings.TrimSuffix(path, string(os.PathSeparator))
 	path, err := filepath.Abs(path)
 	if err != nil {
 		log.Fatal(err)
 	}
-	var entry *Entry
+	var ent *entry
 	for _, e := range entries {
 		if e.Path == path {
-			entry = e
+			ent = e
 			break
 		}
 	}
-	if entry == nil {
-		entry = &Entry{path, 0}
-		entries = append(entries, entry)
+	if ent == nil {
+		ent = &entry{path, 0}
+		entries = append(entries, ent)
 	}
 
-	entry.updateScore(weight)
+	ent.updateScore(weight)
 
 	sortEntriesByScore(entries)
 
@@ -79,21 +79,21 @@ func updateEntriesWithPath(entries []*Entry, path string, weight float64) []*Ent
 }
 
 // Entry correspond to a line in the data file
-type Entry struct {
+type entry struct {
 	Path  string
 	Score float64
 }
 
-func (e *Entry) updateScore(weight float64) float64 {
+func (e *entry) updateScore(weight float64) float64 {
 	e.Score = math.Sqrt(math.Pow(e.Score, 2) + math.Pow(weight, 2))
 	return e.Score
 }
 
-func (e Entry) String() string {
+func (e entry) String() string {
 	return fmt.Sprintf("%.2f\t%s", e.Score, e.Path)
 }
 
-type byScore []*Entry
+type byScore []*entry
 
 func (a byScore) Len() int {
 	return len(a)
@@ -107,22 +107,22 @@ func (a byScore) Less(i, j int) bool {
 	return a[i].Score < a[j].Score
 }
 
-func parseEntry(s string) (entry Entry, err error) {
+func parseEntry(s string) (ent entry, err error) {
 	parts := strings.Split(s, "\t")
 	score, err := strconv.ParseFloat(parts[0], 64)
 	if err != nil {
 		return
 	}
-	entry = Entry{parts[1], score}
-	return entry, nil
+	ent = entry{parts[1], score}
+	return ent, nil
 }
 
-func sortEntriesByScore(entries []*Entry) {
+func sortEntriesByScore(entries []*entry) {
 	sort.Sort(sort.Reverse(byScore(entries)))
 }
 
-func loadEntries(path string) []*Entry {
-	var entries []*Entry
+func loadEntries(path string) []*entry {
+	var entries []*entry
 	file, err := os.Open(path)
 	if err != nil {
 		if os.IsNotExist(err) {

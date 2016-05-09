@@ -14,9 +14,9 @@ func BenchmarkGetCandidates(b *testing.B) {
 		"/tmp", "/foo/gxxbazabc",
 		"/tmp/abc", "/tmp/def",
 	}
-	var entries []*Entry
+	var entries []*entry
 	for _, p := range paths {
-		entries = append(entries, &Entry{p, 1.0})
+		entries = append(entries, &entry{p, 1.0})
 	}
 	for i := 0; i < b.N; i++ {
 		getCandidates(entries, []string{"foo", "bar"}, maxCompleteOptions)
@@ -31,7 +31,7 @@ func TestGetCandidatesShouldRemoveDuplication(t *testing.T) {
 	}
 
 	orig1, orig2, orig3 := matchConsecutive, matchFuzzy, matchAnywhere
-	var dummyMatcher = func(entries []*Entry, args []string) []string {
+	var dummyMatcher = func(entries []*entry, args []string) []string {
 		return []string{"path1", "path2"}
 	}
 	matchConsecutive = dummyMatcher
@@ -41,7 +41,7 @@ func TestGetCandidatesShouldRemoveDuplication(t *testing.T) {
 		matchConsecutive, matchFuzzy, matchAnywhere = orig1, orig2, orig3
 	}()
 
-	entries := []*Entry{&Entry{"path1", 10}}
+	entries := []*entry{&entry{"path1", 10}}
 	result := getCandidates(entries, []string{"foo"}, 4)
 	expected := []string{"path1", "path2"}
 	assertItemsEqual(t, result, expected)
@@ -60,9 +60,9 @@ func TestGetCandidates(t *testing.T) {
 		"/tmp", "/foo/gxxbazabc",
 		"/tmp/abc", "/tmp/def",
 	}
-	var entries []*Entry
+	var entries []*entry
 	for _, p := range paths {
-		entries = append(entries, &Entry{p, 1.0})
+		entries = append(entries, &entry{p, 1.0})
 	}
 
 	result := getCandidates(entries, []string{"foo", "bar"}, 2)
@@ -74,7 +74,7 @@ func TestGetCandidates(t *testing.T) {
 }
 
 func TestAnywhere(t *testing.T) {
-	entries := []*Entry{
+	entries := []*entry{
 		{"/foo/bar/baz", 10},
 		{"/foo/bazar", 10},
 		{"/tmp", 10},
@@ -90,7 +90,7 @@ func TestAnywhere(t *testing.T) {
 }
 
 func TestFuzzy(t *testing.T) {
-	entries := []*Entry{
+	entries := []*entry{
 		{"/foo/bar/baz", 10},
 		{"/foo/bazar", 10},
 		{"/tmp", 10},
@@ -105,7 +105,7 @@ func TestFuzzy(t *testing.T) {
 }
 
 func TestConsecutive(t *testing.T) {
-	entries := []*Entry{
+	entries := []*entry{
 		{"/foo/bar/baz", 10},
 		{"/foo/baz/moo", 10},
 		{"/moo/foo/Baz", 10},

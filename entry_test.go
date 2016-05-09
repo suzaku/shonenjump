@@ -6,14 +6,14 @@ import (
 )
 
 func TestString(t *testing.T) {
-	e := &Entry{"/etc/init", 10.1234}
+	e := &entry{"/etc/init", 10.1234}
 	if e.String() != "10.12\t/etc/init" {
 		t.Errorf("Wrong string representation: %s", e.String())
 	}
 }
 
 func TestUpdateEntryScore(t *testing.T) {
-	e := &Entry{"/etc/init", 0}
+	e := &entry{"/etc/init", 0}
 	e.updateScore(10)
 	if e.Score != 10 {
 		t.Errorf("Entity score is wrong: %f", e.Score)
@@ -30,7 +30,7 @@ func TestClearNotExistDirs(t *testing.T) {
 	isValidPath = func(p string) bool {
 		return !strings.HasSuffix(p, "not-exist")
 	}
-	entries := []*Entry{
+	entries := []*entry{
 		{"/foo/bar", 10},
 		{"/foo/not-exist", 10},
 		{"/tmp", 10},
