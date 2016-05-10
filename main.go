@@ -61,12 +61,12 @@ func main() {
 	purge := flag.Bool("purge", false, "Remove non-existent paths from database")
 	flag.Parse()
 	if *pathToAdd != "" {
-		entries := loadEntries(dataPath)
+		oldEntries := loadEntries(dataPath)
 		weight := 10.0
 
-		entries = updateEntriesWithPath(entries, *pathToAdd, weight)
-
-		saveEntries(entries, dataPath)
+		decrementScoreOfEntries(oldEntries)
+		newEntries := updateEntriesWithPath(oldEntries, *pathToAdd, weight)
+		saveEntries(newEntries, dataPath)
 	} else if *complete {
 		args := flag.Args()
 		var arg string

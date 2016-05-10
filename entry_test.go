@@ -5,6 +5,21 @@ import (
 	"testing"
 )
 
+func TestDecrementScoreOfEntries(t *testing.T) {
+	entries := []*entry{
+		&entry{"a", 20},
+		&entry{"b", 10},
+		&entry{"c", 0},
+	}
+	decrementScoreOfEntries(entries)
+	expected := []float64{19.0, 9.0, 0}
+	for i, e := range entries {
+		if e.Score != expected[i] {
+			t.Errorf("Score not updated correctly, expect %f, get %f", expected[i], e.Score)
+		}
+	}
+}
+
 func TestString(t *testing.T) {
 	e := &entry{"/etc/init", 10.1234}
 	if e.String() != "10.12\t/etc/init" {

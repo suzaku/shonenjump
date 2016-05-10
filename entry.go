@@ -145,3 +145,9 @@ func loadEntries(path string) []*entry {
 	sortEntriesByScore(entries)
 	return entries
 }
+
+func decrementScoreOfEntries(entries []*entry) {
+	for _, e := range entries {
+		e.Score = math.Max(e.Score-1, 0)
+	}
+}
