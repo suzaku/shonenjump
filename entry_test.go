@@ -6,8 +6,8 @@ import (
 
 func TestEntryListSort(t *testing.T) {
 	rawEntries := []*entry{
-		&entry{"b", 10},
-		&entry{"a", 20},
+		{"b", 10},
+		{"a", 20},
 	}
 	entries := entryList(rawEntries)
 	entries.Sort()

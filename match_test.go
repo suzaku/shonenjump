@@ -41,7 +41,7 @@ func TestGetCandidatesShouldRemoveDuplication(t *testing.T) {
 		matchConsecutive, matchFuzzy, matchAnywhere = orig1, orig2, orig3
 	}()
 
-	entries := []*entry{&entry{"path1", 10}}
+	entries := []*entry{{"path1", 10}}
 	result := getCandidates(entries, []string{"foo"}, 4)
 	expected := []string{"path1", "path2"}
 	assertItemsEqual(t, result, expected)
