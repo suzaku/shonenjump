@@ -126,13 +126,11 @@ func main() {
 				fmt.Println(path)
 				return
 			} else {
-				entries := loadEntries(dataPath)
-				fmt.Println(bestGuess(entries, []string{needle}))
+				args = []string{needle}
 			}
-		} else {
-			entries := loadEntries(dataPath)
-			fmt.Println(bestGuess(entries, args))
 		}
+		entries := loadEntries(dataPath)
+		fmt.Println(bestGuess(entries, args))
 	} else {
 		flag.Usage()
 	}
