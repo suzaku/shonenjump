@@ -77,7 +77,7 @@ func main() {
 		oldEntries := loadEntries(dataPath)
 		weight := 10.0
 
-		entryList(oldEntries).Age()
+		oldEntries.Age()
 		newEntries := entryList(oldEntries).Update(*pathToAdd, weight)
 		newEntries.Save(dataPath)
 	} else if *complete {
@@ -107,10 +107,8 @@ func main() {
 	} else if *purge {
 		entries := loadEntries(dataPath)
 		entries = clearNotExistDirs(entries)
-		entryList(entries).Save(dataPath)
+		entries.Save(dataPath)
 	} else if flag.NArg() > 0 {
-		entries := loadEntries(dataPath)
-
 		args := flag.Args()
 		if len(args) == 1 {
 			needle, index, path := parseCompleteOption(args[0])
@@ -122,9 +120,11 @@ func main() {
 				fmt.Println(path)
 				return
 			} else {
+				entries := loadEntries(dataPath)
 				fmt.Println(bestGuess(entries, []string{needle}))
 			}
 		} else {
+			entries := loadEntries(dataPath)
 			fmt.Println(bestGuess(entries, args))
 		}
 	} else {

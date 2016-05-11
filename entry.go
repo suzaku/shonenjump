@@ -127,8 +127,8 @@ func parseEntry(s string) (ent entry, err error) {
 	return ent, nil
 }
 
-func loadEntries(path string) []*entry {
-	var entries []*entry
+func loadEntries(path string) entryList {
+	var entries entryList
 	file, err := os.Open(path)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -148,6 +148,6 @@ func loadEntries(path string) []*entry {
 		}
 		entries = append(entries, &entry)
 	}
-	entryList(entries).Sort()
+	entries.Sort()
 	return entries
 }
