@@ -13,8 +13,8 @@ func TestEntryListSort(t *testing.T) {
 	entries.Sort()
 	expected := []string{"a", "b"}
 	for i, e := range rawEntries {
-		if expected[i] != e.Path {
-			t.Errorf("Item %d not in place, expected %s, got %s", expected[i], e.Path)
+		if expected[i] != e.Val {
+			t.Errorf("Item %d not in place, expected %s, got %s", expected[i], e.Val)
 		}
 	}
 }
@@ -29,7 +29,7 @@ func TestEntryListFilter(t *testing.T) {
 	if len(nonZeroEntries) != 1 {
 		t.Errorf("Entries not filtered correctly: %v", nonZeroEntries)
 	}
-	if nonZeroEntries[0].Path != "/path_b" {
+	if nonZeroEntries[0].Val != "/path_b" {
 		t.Errorf("Incorrect entry left after filtering: %v", nonZeroEntries)
 	}
 }

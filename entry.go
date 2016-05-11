@@ -16,7 +16,7 @@ import (
 
 // Entry correspond to a line in the data file
 type entry struct {
-	Path  string
+	Val   string
 	Score float64
 }
 
@@ -26,7 +26,7 @@ func (e *entry) updateScore(weight float64) float64 {
 }
 
 func (e entry) String() string {
-	return fmt.Sprintf("%.2f\t%s", e.Score, e.Path)
+	return fmt.Sprintf("%.2f\t%s", e.Score, e.Val)
 }
 
 type entryList []*entry
@@ -47,16 +47,16 @@ func (a entryList) Sort() {
 	sort.Sort(sort.Reverse(a))
 }
 
-func (entries entryList) Update(path string, weight float64) entryList {
+func (entries entryList) Update(val string, weight float64) entryList {
 	var ent *entry
 	for _, e := range entries {
-		if e.Path == path {
+		if e.Val == val {
 			ent = e
 			break
 		}
 	}
 	if ent == nil {
-		ent = &entry{path, 0}
+		ent = &entry{val, 0}
 		entries = append(entries, ent)
 	}
 	ent.updateScore(weight)

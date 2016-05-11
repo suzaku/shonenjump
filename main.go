@@ -59,10 +59,10 @@ func parseCompleteOption(s string) (string, int, string) {
 
 func clearNotExistDirs(entries entryList) entryList {
 	isValid := func(e *entry) bool {
-		if isValidPath(e.Path) {
+		if isValidPath(e.Val) {
 			return true
 		} else {
-			log.Printf("Directory %s no longer exists", e.Path)
+			log.Printf("Directory %s no longer exists", e.Val)
 			return false
 		}
 	}
