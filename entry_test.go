@@ -49,13 +49,13 @@ func TestEntryListUpdate(t *testing.T) {
 	}
 }
 
-func TestDecrementScoreOfEntries(t *testing.T) {
-	entries := []*entry{
+func TestEntryListAge(t *testing.T) {
+	entries := entryList{
 		&entry{"a", 20},
 		&entry{"b", 10},
 		&entry{"c", 0},
 	}
-	decrementScoreOfEntries(entries)
+	entries.Age()
 	expected := []float64{19.0, 9.0, 0}
 	for i, e := range entries {
 		if e.Score != expected[i] {

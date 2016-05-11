@@ -77,7 +77,7 @@ func main() {
 		oldEntries := loadEntries(dataPath)
 		weight := 10.0
 
-		decrementScoreOfEntries(oldEntries)
+		entryList(oldEntries).Age()
 		newEntries := entryList(oldEntries).Update(*pathToAdd, weight)
 		newEntries.Save(dataPath)
 	} else if *complete {

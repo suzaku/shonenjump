@@ -110,6 +110,13 @@ func (entries entryList) Save(path string) {
 	}
 }
 
+// As entries get older, their scores become lower.
+func (entries entryList) Age() {
+	for _, e := range entries {
+		e.Score = math.Max(e.Score-1, 0)
+	}
+}
+
 func parseEntry(s string) (ent entry, err error) {
 	parts := strings.Split(s, "\t")
 	score, err := strconv.ParseFloat(parts[0], 64)
@@ -143,10 +150,4 @@ func loadEntries(path string) []*entry {
 	}
 	entryList(entries).Sort()
 	return entries
-}
-
-func decrementScoreOfEntries(entries []*entry) {
-	for _, e := range entries {
-		e.Score = math.Max(e.Score-1, 0)
-	}
 }
