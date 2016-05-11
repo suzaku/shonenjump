@@ -56,7 +56,7 @@ func TestEntryListAge(t *testing.T) {
 		&entry{"c", 0},
 	}
 	entries.Age()
-	expected := []float64{19.0, 9.0, 0}
+	expected := []float64{18.0, 9.0, 0}
 	for i, e := range entries {
 		if e.Score != expected[i] {
 			t.Errorf("Score not updated correctly, expect %f, get %f", expected[i], e.Score)

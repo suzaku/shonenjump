@@ -113,7 +113,8 @@ func (entries entryList) Save(path string) {
 // As entries get older, their scores become lower.
 func (entries entryList) Age() {
 	for _, e := range entries {
-		e.Score = math.Max(e.Score-1, 0)
+		delta := math.Ceil(e.Score / 10)
+		e.Score = math.Max(e.Score-delta, 0)
 	}
 }
 
