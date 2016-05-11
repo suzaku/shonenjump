@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os/user"
 	"path/filepath"
 	"strconv"
@@ -53,6 +54,18 @@ func parseCompleteOption(s string) (string, int, string) {
 	}
 
 	return needle, index, path
+}
+
+func clearNotExistDirs(entries entryList) entryList {
+	isValid := func(e *entry) bool {
+		if isValidPath(e.Path) {
+			return true
+		} else {
+			log.Printf("Directory %s no longer exists", e.Path)
+			return false
+		}
+	}
+	return entries.Filter(isValid)
 }
 
 func main() {

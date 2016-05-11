@@ -1,7 +1,6 @@
 package main
 
 import (
-	"strings"
 	"testing"
 )
 
@@ -17,6 +16,21 @@ func TestEntryListSort(t *testing.T) {
 		if expected[i] != e.Path {
 			t.Errorf("Item %d not in place, expected %s, got %s", expected[i], e.Path)
 		}
+	}
+}
+
+func TestEntryListFilter(t *testing.T) {
+	entries := entryList{
+		&entry{"/path_b", 10},
+		&entry{"/path_a", 0},
+	}
+	nonZeroScore := func(e *entry) bool { return e.Score > 0 }
+	nonZeroEntries := entries.Filter(nonZeroScore)
+	if len(nonZeroEntries) != 1 {
+		t.Errorf("Entries not filtered correctly: %v", nonZeroEntries)
+	}
+	if nonZeroEntries[0].Path != "/path_b" {
+		t.Errorf("Incorrect entry left after filtering: %v", nonZeroEntries)
 	}
 }
 
@@ -67,25 +81,4 @@ func TestUpdateEntryScore(t *testing.T) {
 	if e.Score-14.14 < 0.001 {
 		t.Errorf("Entity score is wrong: %f", e.Score)
 	}
-}
-
-func TestClearNotExistDirs(t *testing.T) {
-	orig := isValidPath
-	defer func() { isValidPath = orig }()
-	isValidPath = func(p string) bool {
-		return !strings.HasSuffix(p, "not-exist")
-	}
-	entries := []*entry{
-		{"/foo/bar", 10},
-		{"/foo/not-exist", 10},
-		{"/tmp", 10},
-		{"/not-exist", 10},
-	}
-	result := clearNotExistDirs(entries)
-	var output []string
-	for _, r := range result {
-		output = append(output, r.Path)
-	}
-	expected := []string{"/foo/bar", "/tmp"}
-	assertItemsEqual(t, output, expected)
 }

@@ -14,18 +14,6 @@ import (
 	"strings"
 )
 
-func clearNotExistDirs(entries []*entry) []*entry {
-	var cleared []*entry
-	for _, e := range entries {
-		if isValidPath(e.Path) {
-			cleared = append(cleared, e)
-		} else {
-			log.Printf("Directory %s no longer exists", e.Path)
-		}
-	}
-	return cleared
-}
-
 // Entry correspond to a line in the data file
 type entry struct {
 	Path  string
@@ -83,6 +71,16 @@ func (entries entryList) Update(path string, weight float64) entryList {
 	entries.Sort()
 
 	return entries
+}
+
+func (entries entryList) Filter(f func(*entry) bool) entryList {
+	var filtered entryList
+	for _, e := range entries {
+		if f(e) {
+			filtered = append(filtered, e)
+		}
+	}
+	return filtered
 }
 
 func (entries entryList) Save(path string) {
