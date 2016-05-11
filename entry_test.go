@@ -14,7 +14,7 @@ func TestEntryListSort(t *testing.T) {
 	expected := []string{"a", "b"}
 	for i, e := range rawEntries {
 		if expected[i] != e.Val {
-			t.Errorf("Item %d not in place, expected %s, got %s", expected[i], e.Val)
+			t.Errorf("Item %d not in place, expected %s, got %s", i, expected[i], e.Val)
 		}
 	}
 }
