@@ -8,13 +8,6 @@ import (
 	"strings"
 )
 
-var isValidPath = func(p string) bool {
-	if _, err := os.Stat(p); os.IsNotExist(err) {
-		return false
-	}
-	return true
-}
-
 type matcher func([]*entry, []string) []string
 
 func bestGuess(entries []*entry, args []string) string {
