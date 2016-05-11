@@ -84,7 +84,7 @@ func main() {
 		}
 
 		oldEntries.Age()
-		newEntries := entryList(oldEntries).Update(path, weight)
+		newEntries := oldEntries.Update(path, weight)
 		newEntries.Save(dataPath)
 	} else if *complete {
 		args := flag.Args()
