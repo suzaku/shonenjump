@@ -20,6 +20,21 @@ func TestEntryListSort(t *testing.T) {
 	}
 }
 
+func TestEntryListUpdate(t *testing.T) {
+	entries := entryList{
+		&entry{"/path_b", 10},
+		&entry{"/path_a", 0},
+	}
+	entries = entries.Update("/path_a", 1)
+	if entries[0].Score != 10 || entries[1].Score != 1 {
+		t.Errorf("Invalid update: %v", entries)
+	}
+	entries = entries.Update("/path_c", 1)
+	if len(entries) != 3 {
+		t.Errorf("New entry not created: %d", len(entries))
+	}
+}
+
 func TestDecrementScoreOfEntries(t *testing.T) {
 	entries := []*entry{
 		&entry{"a", 20},

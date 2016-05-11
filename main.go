@@ -65,8 +65,8 @@ func main() {
 		weight := 10.0
 
 		decrementScoreOfEntries(oldEntries)
-		newEntries := updateEntriesWithPath(oldEntries, *pathToAdd, weight)
-		saveEntries(newEntries, dataPath)
+		newEntries := entryList(oldEntries).Update(*pathToAdd, weight)
+		newEntries.Save(dataPath)
 	} else if *complete {
 		args := flag.Args()
 		var arg string
@@ -94,7 +94,7 @@ func main() {
 	} else if *purge {
 		entries := loadEntries(dataPath)
 		entries = clearNotExistDirs(entries)
-		saveEntries(entries, dataPath)
+		entryList(entries).Save(dataPath)
 	} else if flag.NArg() > 0 {
 		entries := loadEntries(dataPath)
 

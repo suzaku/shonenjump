@@ -26,58 +26,6 @@ func clearNotExistDirs(entries []*entry) []*entry {
 	return cleared
 }
 
-func saveEntries(entries []*entry, path string) {
-	tempfile, err := ioutil.TempFile("", "shonenjump")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer os.Remove(tempfile.Name())
-
-	var buffer bytes.Buffer
-	for _, e := range entries {
-		buffer.WriteString(e.String() + "\n")
-	}
-	if _, err := tempfile.Write(buffer.Bytes()); err != nil {
-		log.Fatal(err)
-	}
-	if err := tempfile.Close(); err != nil {
-		log.Fatal(err)
-	}
-
-	if err = os.MkdirAll(filepath.Dir(path), 0740); err != nil {
-		log.Fatal(err)
-	}
-
-	if err = os.Rename(tempfile.Name(), path); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func updateEntriesWithPath(entries []*entry, path string, weight float64) []*entry {
-	path = strings.TrimSuffix(path, string(os.PathSeparator))
-	path, err := filepath.Abs(path)
-	if err != nil {
-		log.Fatal(err)
-	}
-	var ent *entry
-	for _, e := range entries {
-		if e.Path == path {
-			ent = e
-			break
-		}
-	}
-	if ent == nil {
-		ent = &entry{path, 0}
-		entries = append(entries, ent)
-	}
-
-	ent.updateScore(weight)
-
-	entryList(entries).Sort()
-
-	return entries
-}
-
 // Entry correspond to a line in the data file
 type entry struct {
 	Path  string
@@ -109,6 +57,59 @@ func (a entryList) Less(i, j int) bool {
 
 func (a entryList) Sort() {
 	sort.Sort(sort.Reverse(a))
+}
+
+func (entries entryList) Update(path string, weight float64) entryList {
+	// normalize the input
+	path = strings.TrimSuffix(path, string(os.PathSeparator))
+	path, err := filepath.Abs(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var ent *entry
+	for _, e := range entries {
+		if e.Path == path {
+			ent = e
+			break
+		}
+	}
+	if ent == nil {
+		ent = &entry{path, 0}
+		entries = append(entries, ent)
+	}
+	ent.updateScore(weight)
+
+	entries.Sort()
+
+	return entries
+}
+
+func (entries entryList) Save(path string) {
+	tempfile, err := ioutil.TempFile("", "shonenjump")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer os.Remove(tempfile.Name())
+
+	var buffer bytes.Buffer
+	for _, e := range entries {
+		buffer.WriteString(e.String() + "\n")
+	}
+	if _, err := tempfile.Write(buffer.Bytes()); err != nil {
+		log.Fatal(err)
+	}
+	if err := tempfile.Close(); err != nil {
+		log.Fatal(err)
+	}
+
+	if err = os.MkdirAll(filepath.Dir(path), 0740); err != nil {
+		log.Fatal(err)
+	}
+
+	if err = os.Rename(tempfile.Name(), path); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func parseEntry(s string) (ent entry, err error) {
