@@ -1,9 +1,32 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
+
+func TestPreprocessPath(t *testing.T) {
+	path, err := preprocessPath("/abc/")
+	if err != nil {
+		t.Error(err)
+	}
+	if path != "/abc" {
+		t.Errorf("Trailing slash is not removed in path: %s", path)
+	}
+	path, err = preprocessPath("abc")
+	if err != nil {
+		t.Error(err)
+	}
+	pwd, err := os.Getwd()
+	if err != nil {
+		t.Error(err)
+	}
+	if path != filepath.Join(pwd, "abc") {
+		t.Errorf("Relative path not converted to absolute path: %s", path)
+	}
+}
 
 func TestParseCompleteOption(t *testing.T) {
 	tests := []struct {

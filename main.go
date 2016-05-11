@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"os/user"
 	"path/filepath"
 	"strconv"
@@ -77,8 +78,13 @@ func main() {
 		oldEntries := loadEntries(dataPath)
 		weight := 10.0
 
+		path, err := preprocessPath(*pathToAdd)
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		oldEntries.Age()
-		newEntries := entryList(oldEntries).Update(*pathToAdd, weight)
+		newEntries := entryList(oldEntries).Update(path, weight)
 		newEntries.Save(dataPath)
 	} else if *complete {
 		args := flag.Args()
@@ -130,4 +136,10 @@ func main() {
 	} else {
 		flag.Usage()
 	}
+}
+
+func preprocessPath(path string) (string, error) {
+	// normalize the input
+	path = strings.TrimSuffix(path, string(os.PathSeparator))
+	return filepath.Abs(path)
 }

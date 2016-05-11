@@ -48,13 +48,6 @@ func (a entryList) Sort() {
 }
 
 func (entries entryList) Update(path string, weight float64) entryList {
-	// normalize the input
-	path = strings.TrimSuffix(path, string(os.PathSeparator))
-	path, err := filepath.Abs(path)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	var ent *entry
 	for _, e := range entries {
 		if e.Path == path {
