@@ -61,10 +61,9 @@ func clearNotExistDirs(entries entryList) entryList {
 	isValid := func(e *entry) bool {
 		if isValidPath(e.Val) {
 			return true
-		} else {
-			log.Printf("Directory %s no longer exists", e.Val)
-			return false
 		}
+		log.Printf("Directory %s no longer exists", e.Val)
+		return false
 	}
 	return entries.Filter(isValid)
 }

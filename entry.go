@@ -31,20 +31,20 @@ func (e entry) String() string {
 
 type entryList []*entry
 
-func (a entryList) Len() int {
-	return len(a)
+func (entries entryList) Len() int {
+	return len(entries)
 }
 
-func (a entryList) Swap(i, j int) {
-	a[i], a[j] = a[j], a[i]
+func (entries entryList) Swap(i, j int) {
+	entries[i], entries[j] = entries[j], entries[i]
 }
 
-func (a entryList) Less(i, j int) bool {
-	return a[i].Score < a[j].Score
+func (entries entryList) Less(i, j int) bool {
+	return entries[i].Score < entries[j].Score
 }
 
-func (a entryList) Sort() {
-	sort.Sort(sort.Reverse(a))
+func (entries entryList) Sort() {
+	sort.Sort(sort.Reverse(entries))
 }
 
 func (entries entryList) Update(val string, weight float64) entryList {
