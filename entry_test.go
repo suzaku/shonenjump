@@ -5,6 +5,21 @@ import (
 	"testing"
 )
 
+func TestEntryListSort(t *testing.T) {
+	rawEntries := []*entry{
+		&entry{"b", 10},
+		&entry{"a", 20},
+	}
+	entries := entryList(rawEntries)
+	entries.Sort()
+	expected := []string{"a", "b"}
+	for i, e := range rawEntries {
+		if expected[i] != e.Path {
+			t.Errorf("Item %d not in place, expected %s, got %s", expected[i], e.Path)
+		}
+	}
+}
+
 func TestDecrementScoreOfEntries(t *testing.T) {
 	entries := []*entry{
 		&entry{"a", 20},

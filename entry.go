@@ -73,7 +73,7 @@ func updateEntriesWithPath(entries []*entry, path string, weight float64) []*ent
 
 	ent.updateScore(weight)
 
-	sortEntriesByScore(entries)
+	entryList(entries).Sort()
 
 	return entries
 }
@@ -93,18 +93,22 @@ func (e entry) String() string {
 	return fmt.Sprintf("%.2f\t%s", e.Score, e.Path)
 }
 
-type byScore []*entry
+type entryList []*entry
 
-func (a byScore) Len() int {
+func (a entryList) Len() int {
 	return len(a)
 }
 
-func (a byScore) Swap(i, j int) {
+func (a entryList) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
 }
 
-func (a byScore) Less(i, j int) bool {
+func (a entryList) Less(i, j int) bool {
 	return a[i].Score < a[j].Score
+}
+
+func (a entryList) Sort() {
+	sort.Sort(sort.Reverse(a))
 }
 
 func parseEntry(s string) (ent entry, err error) {
@@ -115,10 +119,6 @@ func parseEntry(s string) (ent entry, err error) {
 	}
 	ent = entry{parts[1], score}
 	return ent, nil
-}
-
-func sortEntriesByScore(entries []*entry) {
-	sort.Sort(sort.Reverse(byScore(entries)))
 }
 
 func loadEntries(path string) []*entry {
@@ -142,7 +142,7 @@ func loadEntries(path string) []*entry {
 		}
 		entries = append(entries, &entry)
 	}
-	sortEntriesByScore(entries)
+	entryList(entries).Sort()
 	return entries
 }
 
