@@ -3,5 +3,15 @@ language: go
 go:
   - 1.6
 
+before_install:
+  - go get -u github.com/golang/lint/golint
+
+install:
+  - go get -d -v ./... && go build -v ./...
+
+script:
+  - golint -set_exit_status ./...
+  - go test -v ./...
+
 notifications:
   email: false
