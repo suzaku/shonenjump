@@ -72,6 +72,7 @@ func main() {
 	pathToAdd := flag.String("add", "", "Add this path")
 	complete := flag.Bool("complete", false, "Used for tab completion")
 	purge := flag.Bool("purge", false, "Remove non-existent paths from database")
+	stat := flag.Bool("stat", false, "Show information about recorded paths")
 	flag.Parse()
 	if *pathToAdd != "" {
 		oldEntries := loadEntries(dataPath)
@@ -113,6 +114,11 @@ func main() {
 		entries := loadEntries(dataPath)
 		entries = clearNotExistDirs(entries)
 		entries.Save(dataPath)
+	} else if *stat {
+		entries := loadEntries(dataPath)
+		for _, e := range entries {
+			fmt.Println(e)
+		}
 	} else if flag.NArg() > 0 {
 		args := flag.Args()
 		if len(args) == 1 {
