@@ -13,6 +13,7 @@ import (
 
 const separator = "__"
 const maxCompleteOptions = 9
+const defaultWeight = 20.0
 
 var dataPath string
 
@@ -76,7 +77,6 @@ func main() {
 	flag.Parse()
 	if *pathToAdd != "" {
 		oldEntries := loadEntries(dataPath)
-		weight := 10.0
 
 		path, err := preprocessPath(*pathToAdd)
 		if err != nil {
@@ -84,7 +84,7 @@ func main() {
 		}
 
 		oldEntries.Age()
-		newEntries := oldEntries.Update(path, weight)
+		newEntries := oldEntries.Update(path, defaultWeight)
 		newEntries.Save(dataPath)
 	} else if *complete {
 		args := flag.Args()
