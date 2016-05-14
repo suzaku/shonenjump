@@ -76,16 +76,7 @@ func main() {
 	stat := flag.Bool("stat", false, "Show information about recorded paths")
 	flag.Parse()
 	if *pathToAdd != "" {
-		oldEntries := loadEntries(dataPath)
-
-		path, err := preprocessPath(*pathToAdd)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		oldEntries.Age()
-		newEntries := oldEntries.Update(path, defaultWeight)
-		newEntries.Save(dataPath)
+		addPath(*pathToAdd)
 	} else if *complete {
 		args := flag.Args()
 		var arg string
@@ -94,22 +85,7 @@ func main() {
 		} else {
 			arg = ""
 		}
-		needle, index, path := parseCompleteOption(arg)
-		if path != "" {
-			fmt.Println(path)
-		} else if index != 0 {
-			path = getNCandidate([]string{needle}, index, "")
-			if path != "" {
-				fmt.Println(path)
-			}
-		} else {
-			entries := loadEntries(dataPath)
-			candidates := getCandidates(entries, []string{needle}, maxCompleteOptions)
-			for i, path := range candidates {
-				parts := []string{needle, strconv.Itoa(i + 1), path}
-				fmt.Println(strings.Join(parts, separator))
-			}
-		}
+		showAutoCompleteOptions(arg)
 	} else if *purge {
 		entries := loadEntries(dataPath)
 		entries = clearNotExistDirs(entries)
@@ -145,4 +121,36 @@ func preprocessPath(path string) (string, error) {
 	// normalize the input
 	path = strings.TrimSuffix(path, string(os.PathSeparator))
 	return filepath.Abs(path)
+}
+
+func addPath(pathToAdd string) {
+	oldEntries := loadEntries(dataPath)
+
+	path, err := preprocessPath(pathToAdd)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	oldEntries.Age()
+	newEntries := oldEntries.Update(path, defaultWeight)
+	newEntries.Save(dataPath)
+}
+
+func showAutoCompleteOptions(arg string) {
+	needle, index, path := parseCompleteOption(arg)
+	if path != "" {
+		fmt.Println(path)
+	} else if index != 0 {
+		path = getNCandidate([]string{needle}, index, "")
+		if path != "" {
+			fmt.Println(path)
+		}
+	} else {
+		entries := loadEntries(dataPath)
+		candidates := getCandidates(entries, []string{needle}, maxCompleteOptions)
+		for i, path := range candidates {
+			parts := []string{needle, strconv.Itoa(i + 1), path}
+			fmt.Println(strings.Join(parts, separator))
+		}
+	}
 }
