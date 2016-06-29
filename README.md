@@ -18,7 +18,7 @@ Quote from the description of [autojump](https://github.com/wting/autojump/):
    For example, if you are using `zsh`, you can do the following:
     
    ```bash
-   wget -O ~/.shonenjump.zsh https://github.com/suzaku/shonenjump/blob/master/scripts/shonenjump.zsh
+   wget -O ~/.shonenjump.zsh https://raw.githubusercontent.com/suzaku/shonenjump/master/scripts/shonenjump.zsh
    echo 'source $HOME/.shonenjump.zsh' >> ~/.zshrc
 ```
 
