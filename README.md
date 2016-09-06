@@ -27,7 +27,7 @@ Quote from the description of [autojump](https://github.com/wting/autojump/):
    You need to place a script into the `zsh/site-functions` directory:
    ```bash
    cd $(brew --prefix)/share/zsh/site-functions/
-   wget https://github.com/suzaku/shonenjump/blob/master/scripts/_j
+   wget https://raw.githubusercontent.com/suzaku/shonenjump/master/scripts/_j
    ```
 
 # Usage
