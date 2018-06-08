@@ -77,7 +77,7 @@ func (entries entryList) Filter(f func(*entry) bool) entryList {
 }
 
 func (entries entryList) Save(path string) {
-	tempfile, err := ioutil.TempFile("", "shonenjump")
+	tempfile, err := ioutil.TempFile(filepath.Dir(path), "shonenjump")
 	if err != nil {
 		log.Fatal(err)
 	}
