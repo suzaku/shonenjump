@@ -1,10 +1,11 @@
 language: go
 
 go:
-  - 1.6
+  - "1.10"
+  - master
 
 before_install:
-  - go get -u github.com/golang/lint/golint
+  - go get -u golang.org/x/lint/golint
 
 install:
   - go get -d -v ./... && go build -v ./...
