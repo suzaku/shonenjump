@@ -1,5 +1,3 @@
-[![Sponsor](https://app.codesponsor.io/embed/MY7qFCdB7bDgiBqdjtV9ASYi/suzaku/shonenjump.svg)](https://app.codesponsor.io/link/MY7qFCdB7bDgiBqdjtV9ASYi/suzaku/shonenjump)
-
 # Shonenjump [![Build Status](https://travis-ci.org/suzaku/shonenjump.svg?branch=master)](https://travis-ci.org/suzaku/shonenjump) [![Go Report Card](https://goreportcard.com/badge/github.com/suzaku/shonenjump)](https://goreportcard.com/report/github.com/suzaku/shonenjump)
 
 shonenjump is a lightweight autojump clone written in Go.
