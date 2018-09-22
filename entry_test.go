@@ -13,8 +13,8 @@ func TestEntryListSort(t *testing.T) {
 	entries.Sort()
 	expected := []string{"a", "b"}
 	for i, e := range rawEntries {
-		if expected[i] != e.Val {
-			t.Errorf("Item %d not in place, expected %s, got %s", i, expected[i], e.Val)
+		if expected[i] != e.val {
+			t.Errorf("Item %d not in place, expected %s, got %s", i, expected[i], e.val)
 		}
 	}
 }
@@ -24,12 +24,12 @@ func TestEntryListFilter(t *testing.T) {
 		&entry{"/path_b", 10},
 		&entry{"/path_a", 0},
 	}
-	nonZeroScore := func(e *entry) bool { return e.Score > 0 }
+	nonZeroScore := func(e *entry) bool { return e.score > 0 }
 	nonZeroEntries := entries.Filter(nonZeroScore)
 	if len(nonZeroEntries) != 1 {
 		t.Errorf("Entries not filtered correctly: %v", nonZeroEntries)
 	}
-	if nonZeroEntries[0].Val != "/path_b" {
+	if nonZeroEntries[0].val != "/path_b" {
 		t.Errorf("Incorrect entry left after filtering: %v", nonZeroEntries)
 	}
 }
@@ -40,7 +40,7 @@ func TestEntryListUpdate(t *testing.T) {
 		&entry{"/path_a", 0},
 	}
 	entries = entries.Update("/path_a", 1)
-	if entries[0].Score != 10 || entries[1].Score != 1 {
+	if entries[0].score != 10 || entries[1].score != 1 {
 		t.Errorf("Invalid update: %v", entries)
 	}
 	entries = entries.Update("/path_c", 1)
@@ -58,8 +58,8 @@ func TestEntryListAge(t *testing.T) {
 	entries.Age()
 	expected := []float64{18.0, 9.0, 0}
 	for i, e := range entries {
-		if e.Score != expected[i] {
-			t.Errorf("Score not updated correctly, expect %f, get %f", expected[i], e.Score)
+		if e.score != expected[i] {
+			t.Errorf("Score not updated correctly, expect %f, get %f", expected[i], e.score)
 		}
 	}
 }
@@ -74,11 +74,11 @@ func TestString(t *testing.T) {
 func TestUpdateEntryScore(t *testing.T) {
 	e := &entry{"/etc/init", 0}
 	e.updateScore(10)
-	if e.Score != 10 {
-		t.Errorf("Entity score is wrong: %f", e.Score)
+	if e.score != 10 {
+		t.Errorf("Entity score is wrong: %f", e.score)
 	}
 	e.updateScore(10)
-	if e.Score-14.14 < 0.001 {
-		t.Errorf("Entity score is wrong: %f", e.Score)
+	if e.score-14.14 < 0.001 {
+		t.Errorf("Entity score is wrong: %f", e.score)
 	}
 }

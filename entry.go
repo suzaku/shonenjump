@@ -16,17 +16,17 @@ import (
 
 // Entry correspond to a line in the data file
 type entry struct {
-	Val   string
-	Score float64
+	val   string
+	score float64
 }
 
 func (e *entry) updateScore(weight float64) float64 {
-	e.Score = math.Sqrt(math.Pow(e.Score, 2) + math.Pow(weight, 2))
-	return e.Score
+	e.score = math.Sqrt(math.Pow(e.score, 2) + math.Pow(weight, 2))
+	return e.score
 }
 
 func (e entry) String() string {
-	return fmt.Sprintf("%.2f\t%s", e.Score, e.Val)
+	return fmt.Sprintf("%.2f\t%s", e.score, e.val)
 }
 
 type entryList []*entry
@@ -40,7 +40,7 @@ func (entries entryList) Swap(i, j int) {
 }
 
 func (entries entryList) Less(i, j int) bool {
-	return entries[i].Score < entries[j].Score
+	return entries[i].score < entries[j].score
 }
 
 func (entries entryList) Sort() {
@@ -50,7 +50,7 @@ func (entries entryList) Sort() {
 func (entries entryList) Update(val string, weight float64) entryList {
 	var ent *entry
 	for _, e := range entries {
-		if e.Val == val {
+		if e.val == val {
 			ent = e
 			break
 		}
@@ -106,8 +106,8 @@ func (entries entryList) Save(path string) {
 // As entries get older, their scores become lower.
 func (entries entryList) Age() {
 	for _, e := range entries {
-		delta := math.Ceil(e.Score / 10)
-		e.Score = math.Max(e.Score-delta, 0)
+		delta := math.Ceil(e.score / 10)
+		e.score = math.Max(e.score-delta, 0)
 	}
 }
 

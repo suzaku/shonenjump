@@ -63,7 +63,7 @@ func TestClearNotExistDirs(t *testing.T) {
 	result := clearNotExistDirs(entries)
 	var output []string
 	for _, r := range result {
-		output = append(output, r.Val)
+		output = append(output, r.val)
 	}
 	expected := []string{"/foo/bar", "/tmp"}
 	assertItemsEqual(t, output, expected)
