@@ -8,6 +8,16 @@ func BenchmarkGetCandidates(b *testing.B) {
 	isValidPath = func(p string) bool {
 		return true
 	}
+	entries := generateEntries()
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		getCandidates(entries, []string{"foo", "bar"}, maxCompleteOptions)
+	}
+}
+
+func generateEntries() []*entry {
 	paths := []string{
 		"/home/tester", "/home/tester/projects",
 		"/foo/bar/baz", "/foo/bazar",
@@ -18,9 +28,7 @@ func BenchmarkGetCandidates(b *testing.B) {
 	for _, p := range paths {
 		entries = append(entries, &entry{p, 1.0})
 	}
-	for i := 0; i < b.N; i++ {
-		getCandidates(entries, []string{"foo", "bar"}, maxCompleteOptions)
-	}
+	return entries
 }
 
 func TestGetCandidatesShouldRemoveDuplication(t *testing.T) {
