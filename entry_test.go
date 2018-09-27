@@ -8,11 +8,12 @@ func TestEntryListSort(t *testing.T) {
 	rawEntries := []*entry{
 		{"b", 10},
 		{"a", 20},
+		{"c", 15},
 	}
 	entries := entryList(rawEntries)
 	entries.Sort()
-	expected := []string{"a", "b"}
-	for i, e := range rawEntries {
+	expected := []string{"a", "c", "b"}
+	for i, e := range entries {
 		if expected[i] != e.val {
 			t.Errorf("Item %d not in place, expected %s, got %s", i, expected[i], e.val)
 		}

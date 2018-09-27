@@ -31,20 +31,10 @@ func (e entry) String() string {
 
 type entryList []*entry
 
-func (entries entryList) Len() int {
-	return len(entries)
-}
-
-func (entries entryList) Swap(i, j int) {
-	entries[i], entries[j] = entries[j], entries[i]
-}
-
-func (entries entryList) Less(i, j int) bool {
-	return entries[i].score < entries[j].score
-}
-
 func (entries entryList) Sort() {
-	sort.Sort(sort.Reverse(entries))
+	sort.Slice(entries, func(i, j int) bool {
+		return entries[i].score > entries[j].score
+	})
 }
 
 func (entries entryList) Update(val string, weight float64) entryList {
