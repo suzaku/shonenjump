@@ -1,8 +1,43 @@
 package main
 
 import (
+	"bufio"
+	"io/ioutil"
+	"os"
 	"testing"
 )
+
+func TestEntryListSave(t *testing.T) {
+	rawEntries := []*entry{
+		{"b", 10}, {"a", 20}, {"c", 15},
+	}
+	entries := entryList(rawEntries)
+
+	entriesFile, _ := ioutil.TempFile("", "testEntries")
+	fileName := entriesFile.Name()
+	defer os.Remove(fileName)
+
+	entries.Save(fileName)
+
+	entriesFile, err := os.Open(fileName)
+	if err != nil {
+		t.Error("Failed to read the saved entries file.", err)
+	}
+	scanner := bufio.NewScanner(entriesFile)
+	results := []string{}
+	for scanner.Scan() {
+		line := scanner.Text()
+		results = append(results, line)
+	}
+	if len(results) != len(entries) {
+		t.Errorf("Incorrect number of entries saved: %q", results)
+	}
+	for i, e := range entries {
+		if results[i] != e.String() {
+			t.Errorf("Entry %d saved incorrectly: %q", i, results[i])
+		}
+	}
+}
 
 func TestEntryListSort(t *testing.T) {
 	rawEntries := []*entry{

@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -73,13 +72,12 @@ func (entries entryList) Save(path string) {
 	}
 	defer os.Remove(tempfile.Name())
 
-	var buffer bytes.Buffer
+	w := bufio.NewWriter(tempfile)
 	for _, e := range entries {
-		buffer.WriteString(e.String() + "\n")
+		fmt.Fprintf(w, "%s\n", e)
 	}
-	if _, err := tempfile.Write(buffer.Bytes()); err != nil {
-		log.Fatal(err)
-	}
+	w.Flush()
+
 	if err := tempfile.Close(); err != nil {
 		log.Fatal(err)
 	}
