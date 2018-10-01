@@ -11,10 +11,12 @@ import (
 	"strings"
 )
 
-const version = "0.7.1"
-const separator = "__"
-const maxCompleteOptions = 9
-const defaultWeight = 20.0
+const (
+    version = "0.7.1"
+    separator = "__"
+    maxCompleteOptions = 9
+    defaultWeight = 20.0
+)
 
 var dataPath string
 
