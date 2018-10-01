@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-const version = "0.7.0"
+const version = "0.7.1"
 const separator = "__"
 const maxCompleteOptions = 9
 const defaultWeight = 20.0
