@@ -1,5 +1,33 @@
+set -gx AUTOJUMP_SOURCED 1
+
+# set user installation path
+if test -d ~/.shonenjump
+    set -x PATH ~/.shonenjump/bin $PATH
+end
+
+# Set ostype, if not set
+if not set -q OSTYPE
+    set -gx OSTYPE (bash -c 'echo ${OSTYPE}')
+end
+
+
 # enable tab completion
 complete -x -c j -a '(shonenjump --complete (commandline -t))'
+
+
+# set error file location
+if test (uname) = "Darwin"
+    set -gx AUTOJUMP_ERROR_PATH ~/Library/shonenjump/errors.log
+else if test -d "$XDG_DATA_HOME"
+    set -gx AUTOJUMP_ERROR_PATH $XDG_DATA_HOME/shonenjump/errors.log
+else
+    set -gx AUTOJUMP_ERROR_PATH ~/.local/share/shonenjump/errors.log
+end
+
+if test ! -d (dirname $AUTOJUMP_ERROR_PATH)
+    mkdir -p (dirname $AUTOJUMP_ERROR_PATH)
+end
+
 
 # change pwd hook
 function __aj_add --on-variable PWD
@@ -10,6 +38,7 @@ end
 
 # misc helper functions
 function __aj_err
+    # TODO(ting|#247): set error file location
     echo -e $argv 1>&2; false
 end
 
@@ -21,7 +50,7 @@ function j
         case '*'
             set -l output (shonenjump $argv)
             # Check for . and attempt a regular cd
-            if [ $output = "." ] 
+            if [ $output = "." ]
                 cd $argv
             else
                 if test -d "$output"
