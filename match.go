@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/renstrom/fuzzysearch/fuzzy"
+	"github.com/lithammer/fuzzysearch/fuzzy"
 	"os"
 	"path/filepath"
 	"regexp"
