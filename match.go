@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/lithammer/fuzzysearch/fuzzy"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/lithammer/fuzzysearch/fuzzy"
 )
 
 type matcher func([]*entry, []string) []string
@@ -69,7 +70,7 @@ var matchAnywhere = func(entries []*entry, args []string) []string {
 	}
 
 	for _, e := range entries {
-		if pattern.Match([]byte(e.val)) {
+		if pattern.MatchString(e.val) {
 			matches = append(matches, e.val)
 		}
 	}
