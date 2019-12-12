@@ -12,10 +12,10 @@ import (
 )
 
 const (
-    version = "0.7.4"
-    separator = "__"
-    maxCompleteOptions = 9
-    defaultWeight = 20.0
+	version            = "0.7.4"
+	separator          = "__"
+	maxCompleteOptions = 9
+	defaultWeight      = 20.0
 )
 
 var dataPath string
@@ -77,7 +77,7 @@ func main() {
 	complete := flag.Bool("complete", false, "Used for tab completion")
 	purge := flag.Bool("purge", false, "Remove non-existent paths from database")
 	stat := flag.Bool("stat", false, "Show information about recorded paths")
-    ver := flag.Bool("version", false, "Show version of shonenjump")
+	ver := flag.Bool("version", false, "Show version of shonenjump")
 	flag.Parse()
 	if *pathToAdd != "" {
 		addPath(*pathToAdd)
@@ -99,8 +99,8 @@ func main() {
 		for _, e := range entries {
 			fmt.Println(e)
 		}
-    } else if *ver {
-        fmt.Println(version)
+	} else if *ver {
+		fmt.Println(version)
 	} else if flag.NArg() > 0 {
 		args := flag.Args()
 		if len(args) == 1 {
