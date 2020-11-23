@@ -76,9 +76,12 @@ func (entries entryList) Save(path string) {
 	}
 	defer os.Remove(tempfile.Name())
 
+	writer := bufio.NewWriter(tempfile)
 	for _, e := range entries {
-		tempfile.WriteString(e.String() + "\n")
+		writer.WriteString(e.String())
+		writer.WriteRune('\n')
 	}
+	writer.Flush()
 
 	if err := tempfile.Close(); err != nil {
 		log.Fatal(err)
