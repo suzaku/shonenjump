@@ -66,6 +66,10 @@ func (entries entryList) Filter(f func(*entry) bool) entryList {
 }
 
 func (entries entryList) Save(path string) {
+	if err := os.MkdirAll(filepath.Dir(path), 0740); err != nil {
+		log.Fatal(err)
+	}
+
 	tempfile, err := ioutil.TempFile(filepath.Dir(path), "shonenjump")
 	if err != nil {
 		log.Fatal(err)
@@ -77,10 +81,6 @@ func (entries entryList) Save(path string) {
 	}
 
 	if err := tempfile.Close(); err != nil {
-		log.Fatal(err)
-	}
-
-	if err = os.MkdirAll(filepath.Dir(path), 0740); err != nil {
 		log.Fatal(err)
 	}
 
