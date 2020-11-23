@@ -97,6 +97,24 @@ func TestAnywhere(t *testing.T) {
 	assertItemsEqual(t, result, expected)
 }
 
+func TestExactName(t *testing.T) {
+	entries := []*entry{
+		{"/app/open/tidb", 10},
+		{"/app/open/redis", 10},
+		{"/foo/redis-sdk/bazar", 10},
+		{"/tmp", 10},
+		{"/foo/tidb/gxxbazabc", 10},
+	}
+	t.Run("Should returns empty result if the number of args is not exactly one", func(t *testing.T) {
+		result := matchExactName(entries, []string{"tidb", "baz"})
+		assertItemsEqual(t, result, []string{})
+	})
+	t.Run("Should only match last part of name", func(t *testing.T) {
+		result := matchExactName(entries, []string{"tidb"})
+		assertItemsEqual(t, result, []string{"/app/open/tidb"})
+	})
+}
+
 func TestFuzzy(t *testing.T) {
 	entries := []*entry{
 		{"/foo/bar/baz", 10},
