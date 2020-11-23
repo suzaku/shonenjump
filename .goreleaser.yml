@@ -1,26 +1,27 @@
-archives:
-  name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
-  replacements:
-    darwin: Darwin
-    linux: Linux
-    windows: Windows
-    386: i386
-    amd64: x86_64
-  files:
-    - README.md
-    - LICENSE
-    - scripts/*
-brews:
-  - tap:
-      owner: suzaku
-      name: homebrew-shonenjump
-    folder: Formula
-    homepage:  https://github.com/suzaku/shonenjump
-    description: A faster way to change directory and improve command line productivity.
-    test: |
-      system "#{bin}/shonenjump -version"
-    install: |-
-      bin.install "shonenjump"
-      bash_completion.install "scripts/shonenjump.bash" => "j"
-      zsh_completion.install "scripts/shonenjump.zsh" => "_j"
-      fish_completion.install "scripts/shonenjump.fish"
+builds:
+  archives:
+    name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+    files:
+      - README.md
+      - LICENSE
+      - scripts/*
+  brews:
+    - tap:
+        owner: suzaku
+        name: homebrew-shonenjump
+      folder: Formula
+      homepage:  https://github.com/suzaku/shonenjump
+      description: A faster way to change directory and improve command line productivity.
+      test: |
+        system "#{bin}/shonenjump -version"
+      install: |-
+        bin.install "shonenjump"
+        bash_completion.install "scripts/shonenjump.bash" => "j"
+        zsh_completion.install "scripts/shonenjump.zsh" => "_j"
+        fish_completion.install "scripts/shonenjump.fish"
