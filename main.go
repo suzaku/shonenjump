@@ -131,13 +131,14 @@ func preprocessPath(path string) (string, error) {
 }
 
 func addPath(pathToAdd string) {
-	oldEntries := loadEntries(ensureDataPath())
-
 	path, err := preprocessPath(pathToAdd)
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	if !isValidPath(path) {
+		return
+	}
+	oldEntries := loadEntries(ensureDataPath())
 	oldEntries.Age()
 	newEntries := oldEntries.Update(path, defaultWeight)
 	newEntries.Save(ensureDataPath())
