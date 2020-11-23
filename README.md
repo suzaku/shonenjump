@@ -1,6 +1,7 @@
-# Shonenjump [![Build Status](https://travis-ci.org/suzaku/shonenjump.svg?branch=master)](https://travis-ci.org/suzaku/shonenjump) [![Go Report Card](https://goreportcard.com/badge/github.com/suzaku/shonenjump)](https://goreportcard.com/report/github.com/suzaku/shonenjump)
+# Shonenjump ![build](https://github.com/suzaku/shonenjump/workflows/build/badge.svg) [![Go Report Card](https://goreportcard.com/badge/github.com/suzaku/shonenjump)](https://goreportcard.com/report/github.com/suzaku/shonenjump)
 
 shonenjump is a lightweight autojump clone written in Go.
+
 
 <a href="https://www.buymeacoffee.com/suzaku" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
