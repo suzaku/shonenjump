@@ -18,17 +18,17 @@ const (
 	defaultWeight      = 20.0
 )
 
-var dataPath string
-
-func init() {
+func ensureDataPath() string {
 	usr, _ := user.Current()
 	dir := filepath.Join(usr.HomeDir, ".local/share/shonenjump")
-
-	dataPath = filepath.Join(dir, "shonenjump.txt")
+	if err := os.MkdirAll(dir, 0740); err != nil {
+		panic(err)
+	}
+	return filepath.Join(dir, "shonenjump.txt")
 }
 
 func getNCandidate(args []string, index int, defaultPath string) string {
-	entries := loadEntries(dataPath)
+	entries := loadEntries(ensureDataPath())
 	candidates := getCandidates(entries, args, index)
 	if len(candidates) == index {
 		return candidates[index-1]
@@ -79,6 +79,7 @@ func main() {
 	stat := flag.Bool("stat", false, "Show information about recorded paths")
 	ver := flag.Bool("version", false, "Show version of shonenjump")
 	flag.Parse()
+	dataPath := ensureDataPath()
 	if *pathToAdd != "" {
 		addPath(*pathToAdd)
 	} else if *complete {
@@ -130,7 +131,7 @@ func preprocessPath(path string) (string, error) {
 }
 
 func addPath(pathToAdd string) {
-	oldEntries := loadEntries(dataPath)
+	oldEntries := loadEntries(ensureDataPath())
 
 	path, err := preprocessPath(pathToAdd)
 	if err != nil {
@@ -139,7 +140,7 @@ func addPath(pathToAdd string) {
 
 	oldEntries.Age()
 	newEntries := oldEntries.Update(path, defaultWeight)
-	newEntries.Save(dataPath)
+	newEntries.Save(ensureDataPath())
 }
 
 func showAutoCompleteOptions(arg string) {
@@ -152,7 +153,7 @@ func showAutoCompleteOptions(arg string) {
 			fmt.Println(path)
 		}
 	} else {
-		entries := loadEntries(dataPath)
+		entries := loadEntries(ensureDataPath())
 		candidates := getCandidates(entries, []string{needle}, maxCompleteOptions)
 		for i, path := range candidates {
 			parts := []string{needle, strconv.Itoa(i + 1), path}
