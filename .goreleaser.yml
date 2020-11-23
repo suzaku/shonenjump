@@ -4,7 +4,6 @@ builds:
     goos:
       - linux
       - darwin
-      - windows
     goarch:
       - 386
       - amd64
@@ -14,9 +13,8 @@ builds:
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     replacements:
-      darwin: Darwin
+      darwin: Mac
       linux: Linux
-      windows: Windows
       386: i386
       amd64: x86_64
     files:
