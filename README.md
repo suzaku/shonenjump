@@ -23,7 +23,7 @@ Quote from the description of [autojump](https://github.com/wting/autojump/):
    ```bash
    wget -O ~/.shonenjump.zsh https://raw.githubusercontent.com/suzaku/shonenjump/master/scripts/shonenjump.zsh
    echo 'source $HOME/.shonenjump.zsh' >> ~/.zshrc
-```
+    ```
 
 1. If you are using `zsh`, you'll need an extra step to setup tab completion.
 
