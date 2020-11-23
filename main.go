@@ -37,9 +37,9 @@ func getNCandidate(args []string, index int, defaultPath string) string {
 }
 
 func parseCompleteOption(s string) (string, int, string) {
-	needle := ""
-	index := 0
-	path := ""
+	var needle string
+	var index int
+	var path string
 
 	parts := strings.SplitN(s, separator, 3)
 	n := len(parts)
