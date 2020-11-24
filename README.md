@@ -14,7 +14,24 @@ Quote from the description of [autojump](https://github.com/wting/autojump/):
 
 > Directories must be visited first before they can be jumped to.
 
+# How to use it?
+
+Once you have `cd` into a directory, `shonenjump` will save it in a list.
+The next time you can use the `j` shortcut to visit it.
+
+For example, suppose that you have `cd` into a directory called `/usr/local/Very-Long-Dir-Name/Sub-Dir/target` after 
+`shonenjump` is enabled. You can then use `j long` or `j target` or `j vldn` to visit it.
+
+Sometimes the first matched directory is not what you want, you can type `j <your key word>` and 
+then type Tab to trigger auto completion and see the options.
+
 # Installation
+
+## macOS
+
+`brew install suzaku/homebrew-shonenjump/shonenjump`
+
+## Linux
 
 1. [Download](https://github.com/suzaku/shonenjump/releases) the shonenjump binary for your platform, place it in a directory in your `$PATH`.
 1. [Download](https://github.com/suzaku/shonenjump/blob/master/scripts/) the setup script for your shell and include it in your shell profile.
@@ -30,12 +47,6 @@ Quote from the description of [autojump](https://github.com/wting/autojump/):
 
    You need to place a script into the `zsh/site-functions` directory:
    ```bash
-   cd $(brew --prefix)/share/zsh/site-functions/
+   cd <Your Zsh Site-functions Dir>
    wget https://raw.githubusercontent.com/suzaku/shonenjump/master/scripts/_j
    ```
-
-# Usage
-
-Usage is similar to [autojump](https://github.com/wting/autojump/#usage).
-
-This section will be updated if different behaviors were to be added in the future.
