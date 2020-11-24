@@ -32,6 +32,21 @@ brews:
       system "#{bin}/shonenjump -version"
     install: |-
       bin.install "shonenjump"
-      bash_completion.install "scripts/shonenjump.bash" => "j"
-      zsh_completion.install "scripts/shonenjump.zsh" => "_j"
-      fish_completion.install "scripts/shonenjump.fish"
+      path = prefix/"etc/profile.d"
+      path.mkpath
+      system "cp", "scripts/shonenjump.bash", path/"shonenjump.bash"
+      system "cp", "scripts/shonenjump.zsh", path/"shonenjump.zsh"
+      system "cp", "scripts/shonenjump.fish", path/"shonenjump.fish"
+      zsh_completion.install "scripts/_j" => "_j"
+    caveats: |-
+      If you are using Bash, add the following line to your ~/.bash_profile:
+
+        [ -f #{etc}/profile.d/shonenjump.bash ] && . #{etc}/profile.d/shonenjump.bash
+
+      If you are using Zsh, add the following line to your ~/.zshrc:
+
+        [ -f #{etc}/profile.d/shonenjump.zsh ] && . #{etc}/profile.d/shonenjump.zsh
+
+      If you are using Fish, add the following line to your ~/.config/fish/config.fish:
+
+        [ -f #{etc}/profile.d/shonenjump.fish ]; and source #{etc}/profile.d/shonenjump.fish
