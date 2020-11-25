@@ -50,7 +50,7 @@ function j
         case '*'
             set -l output (shonenjump $argv)
             # Check for . and attempt a regular cd
-            if [ $output = "." ]
+            if test "$output" = "."
                 cd $argv
             else
                 if test -d "$output"
