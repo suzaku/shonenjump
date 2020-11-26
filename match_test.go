@@ -157,3 +157,43 @@ func assertItemsEqual(t *testing.T, result []string, expected []string) {
 		}
 	}
 }
+
+func TestCalculateDiff(t *testing.T) {
+	type args struct {
+		source string
+		target string
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			name: "Should be -1 if source is longer than target",
+			args: args{source: "abcd", target: "ab"},
+			want: -1,
+		},
+		{
+			name: "Should be 0 if source is equal to target",
+			args: args{source: "abcd", target: "abcd"},
+			want: 0,
+		},
+		{
+			name: "Should count different characters in between",
+			args: args{source: "ae", target: "names"},
+			want: 3,
+		},
+		{
+			name: "Should count non-ASCII characters correctly",
+			args: args{source: "a世界z", target: "abc世x界！z"},
+			want: 4,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := calculateDiff(tt.args.source, tt.args.target); got != tt.want {
+				t.Errorf("calculateDiff() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

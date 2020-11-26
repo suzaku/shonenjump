@@ -6,8 +6,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-
-	"github.com/lithammer/fuzzysearch/fuzzy"
+	"unicode/utf8"
 )
 
 type matcher func([]*entry, []string) []string
@@ -61,11 +60,11 @@ var matchFuzzy = func(entries []*entry, args []string) []string {
 	distanceThreshold := len(arg) * 2
 	for _, e := range entries {
 		_, lastPart := filepath.Split(e.val)
-		rank := fuzzy.RankMatch(arg, lastPart)
-		if rank == -1 {
+		diff := calculateDiff(arg, lastPart)
+		if diff == -1 {
 			continue
 		}
-		if rank < distanceThreshold {
+		if diff < distanceThreshold {
 			matches = append(matches, e.val)
 		}
 	}
@@ -113,4 +112,29 @@ func getCandidates(entries []*entry, args []string, limit int) []string {
 		}
 	}
 	return candidates
+}
+
+func calculateDiff(source, target string) int {
+	lenDiff := len(target) - len(source)
+	if lenDiff < 0 {
+		return -1
+	}
+	if lenDiff == 0 && source == target {
+		return 0
+	}
+
+	var runeDiff int
+
+	for _, r := range source {
+		i := strings.IndexRune(target, r)
+		if i == -1 {
+			return -1
+		}
+		runeDiff += utf8.RuneCountInString(target[:i])
+		target = target[i+utf8.RuneLen(r):]
+	}
+
+	// Count up remaining char
+	runeDiff += utf8.RuneCountInString(target)
+	return runeDiff
 }
