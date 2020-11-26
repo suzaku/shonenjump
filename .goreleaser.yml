@@ -38,6 +38,7 @@ brews:
       system "cp", "scripts/shonenjump.zsh", path/"shonenjump.zsh"
       system "cp", "scripts/shonenjump.fish", path/"shonenjump.fish"
       zsh_completion.install "scripts/_j" => "_j"
+      fish_completion.install "scripts/j.fish"
     caveats: |-
       If you are using Bash, add the following line to your ~/.bash_profile:
 

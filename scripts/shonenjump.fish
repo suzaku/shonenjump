@@ -1,19 +1,9 @@
 set -gx AUTOJUMP_SOURCED 1
 
-# set user installation path
-if test -d ~/.shonenjump
-    set -x PATH ~/.shonenjump/bin $PATH
-end
-
 # Set ostype, if not set
 if not set -q OSTYPE
     set -gx OSTYPE (bash -c 'echo ${OSTYPE}')
 end
-
-
-# enable tab completion
-complete -x -c j -a '(shonenjump --complete (commandline -t))'
-
 
 # set error file location
 if test (uname) = "Darwin"
