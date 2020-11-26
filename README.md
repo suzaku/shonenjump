@@ -40,7 +40,7 @@ then type Tab to trigger auto completion and see the options.
     
    ```bash
    wget -O ~/.shonenjump.zsh https://raw.githubusercontent.com/suzaku/shonenjump/master/scripts/shonenjump.zsh
-   echo 'source $HOME/.shonenjump.zsh' >> ~/.zshrc
+   echo '. $HOME/.shonenjump.zsh' >> ~/.zshrc
     ```
 
 1. If you are using `zsh`, you'll need an extra step to setup tab completion.

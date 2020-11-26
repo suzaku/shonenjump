@@ -50,4 +50,4 @@ brews:
 
       If you are using Fish, add the following line to your ~/.config/fish/config.fish:
 
-        [ -f #{etc}/profile.d/shonenjump.fish ]; and source #{etc}/profile.d/shonenjump.fish
+        [ -f #{etc}/profile.d/shonenjump.fish ]; and . #{etc}/profile.d/shonenjump.fish
