@@ -1,1 +1,1 @@
-complete -x -c j -a '(shonenjump --complete --path-only (commandline -t))'
+complete -x -c j -a '(shonenjump --complete (commandline -t))'

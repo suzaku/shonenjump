@@ -78,7 +78,6 @@ func clearNotExistDirs(entries entryList) (entryList, bool) {
 func main() {
 	pathToAdd := flag.String("add", "", "Add this path")
 	complete := flag.Bool("complete", false, "Used for tab completion")
-	pathOnly := flag.Bool("path-only", false, "Only output path names as completion options.")
 	purge := flag.Bool("purge", false, "Remove non-existent paths from database")
 	stat := flag.Bool("stat", false, "Show information about recorded paths")
 	ver := flag.Bool("version", false, "Show version of shonenjump")
@@ -94,7 +93,7 @@ func main() {
 		} else {
 			arg = ""
 		}
-		showAutoCompleteOptions(arg, *pathOnly)
+		showAutoCompleteOptions(arg)
 	} else if *purge {
 		entries := loadEntries(dataPath)
 		entries, changed := clearNotExistDirs(entries)
@@ -150,7 +149,7 @@ func addPath(pathToAdd string) {
 	newEntries.Save(ensureDataPath())
 }
 
-func showAutoCompleteOptions(arg string, pathOnly bool) {
+func showAutoCompleteOptions(arg string) {
 	needle, index, path := parseCompleteOption(arg)
 	if path != "" {
 		fmt.Println(path)
@@ -163,13 +162,8 @@ func showAutoCompleteOptions(arg string, pathOnly bool) {
 		entries := loadEntries(ensureDataPath())
 		candidates := getCandidates(entries, []string{needle}, maxCompleteOptions)
 		for i, path := range candidates {
-			if pathOnly {
-				fmt.Println(path)
-			} else {
-				idx := strconv.Itoa(i + 1)
-				output := needle + separator + idx + separator + path
-				fmt.Println(output)
-			}
+			parts := []string{needle, strconv.Itoa(i + 1), path}
+			fmt.Println(strings.Join(parts, separator))
 		}
 	}
 }
