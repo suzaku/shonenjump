@@ -60,11 +60,14 @@ func TestClearNotExistDirs(t *testing.T) {
 		{"/tmp", 10},
 		{"/not-exist", 10},
 	}
-	result := clearNotExistDirs(entries)
+	result, changed := clearNotExistDirs(entries)
 	var output []string
 	for _, r := range result {
 		output = append(output, r.val)
 	}
 	expected := []string{"/foo/bar", "/tmp"}
 	assertItemsEqual(t, output, expected)
+	if !changed {
+		t.Error("Empty dirs get deleted, but changed is false.")
+	}
 }

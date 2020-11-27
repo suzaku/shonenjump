@@ -55,21 +55,6 @@ func TestEntryListSort(t *testing.T) {
 	}
 }
 
-func TestEntryListFilter(t *testing.T) {
-	entries := entryList{
-		&entry{"/path_b", 10},
-		&entry{"/path_a", 0},
-	}
-	nonZeroScore := func(e *entry) bool { return e.score > 0 }
-	nonZeroEntries := entries.Filter(nonZeroScore)
-	if len(nonZeroEntries) != 1 {
-		t.Errorf("Entries not filtered correctly: %v", nonZeroEntries)
-	}
-	if nonZeroEntries[0].val != "/path_b" {
-		t.Errorf("Incorrect entry left after filtering: %v", nonZeroEntries)
-	}
-}
-
 func TestEntryListUpdate(t *testing.T) {
 	entries := entryList{
 		&entry{"/path_b", 10},

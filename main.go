@@ -61,15 +61,18 @@ func parseCompleteOption(s string) (string, int, string) {
 	return needle, index, path
 }
 
-func clearNotExistDirs(entries entryList) entryList {
-	isValid := func(e *entry) bool {
+func clearNotExistDirs(entries entryList) (entryList, bool) {
+	var changed bool
+	var result entryList
+	for _, e := range entries {
 		if isValidPath(e.val) {
-			return true
+			result = append(result, e)
+		} else {
+			log.Printf("Directory %s no longer exists", e.val)
+			changed = true
 		}
-		log.Printf("Directory %s no longer exists", e.val)
-		return false
 	}
-	return entries.Filter(isValid)
+	return result, changed
 }
 
 func main() {
@@ -94,8 +97,10 @@ func main() {
 		showAutoCompleteOptions(arg, *pathOnly)
 	} else if *purge {
 		entries := loadEntries(dataPath)
-		entries = clearNotExistDirs(entries)
-		entries.Save(dataPath)
+		entries, changed := clearNotExistDirs(entries)
+		if changed {
+			entries.Save(dataPath)
+		}
 	} else if *stat {
 		entries := loadEntries(dataPath)
 		for _, e := range entries {

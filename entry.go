@@ -55,16 +55,6 @@ func (entries entryList) Update(val string, weight float64) entryList {
 	return entries
 }
 
-func (entries entryList) Filter(f func(*entry) bool) entryList {
-	var filtered entryList
-	for _, e := range entries {
-		if f(e) {
-			filtered = append(filtered, e)
-		}
-	}
-	return filtered
-}
-
 func (entries entryList) Save(path string) {
 	if err := os.MkdirAll(filepath.Dir(path), 0740); err != nil {
 		log.Fatal(err)
