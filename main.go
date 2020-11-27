@@ -36,11 +36,7 @@ func getNCandidate(args []string, index int, defaultPath string) string {
 	return defaultPath
 }
 
-func parseCompleteOption(s string) (string, int, string) {
-	var needle string
-	var index int
-	var path string
-
+func parseCompleteOption(s string) (needle string, index int, path string) {
 	parts := strings.SplitN(s, separator, 3)
 	n := len(parts)
 	if n == 1 {
@@ -57,8 +53,7 @@ func parseCompleteOption(s string) (string, int, string) {
 			}
 		}
 	}
-
-	return needle, index, path
+	return
 }
 
 func clearNotExistDirs(entries entryList) (entryList, bool) {
