@@ -25,7 +25,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/setup-go@v2
-      - run: go test .
+      - run: go test ./...
   goreleaser:
     needs: [golangci, test]
     if: success() && startsWith(github.ref, 'refs/tags/')

@@ -1,9 +1,9 @@
 # change pwd hook
 shonenjump_chpwd() {
     if [[ -f "${AUTOJUMP_ERROR_PATH}" ]]; then
-        shonenjump --add "$(pwd)" >/dev/null 2>>${AUTOJUMP_ERROR_PATH} &!
+        shonenjump add "$(pwd)" >/dev/null 2>>${AUTOJUMP_ERROR_PATH} &!
     else
-        shonenjump --add "$(pwd)" >/dev/null &!
+        shonenjump add "$(pwd)" >/dev/null &!
     fi
 }
 
@@ -14,12 +14,12 @@ chpwd_functions+=shonenjump_chpwd
 # default shonenjump command
 j() {
     if [[ ${1} == -* ]] && [[ ${1} != "--" ]]; then
-        shonenjump ${@}
+        shonenjump guess ${@}
         return
     fi
 
     setopt localoptions noautonamedirs
-    local output="$(shonenjump ${@})"
+    local output="$(shonenjump guess ${@})"
     if [[ -d "${output}" ]]; then
 				if [ -t 1 ]; then  # if stdout is a terminal, use colors
 						echo -e "\\033[31m${output}\\033[0m"
@@ -39,7 +39,7 @@ j() {
 # jump to child directory (subdirectory of current path)
 jc() {
     if [[ ${1} == -* ]] && [[ ${1} != "--" ]]; then
-        shonenjump ${@}
+        shonenjump guess ${@}
         return
     else
         j $(pwd) ${@}
@@ -50,12 +50,12 @@ jc() {
 # open shonenjump results in file browser
 jo() {
     if [[ ${1} == -* ]] && [[ ${1} != "--" ]]; then
-        shonenjump ${@}
+        shonenjump guess ${@}
         return
     fi
 
     setopt localoptions noautonamedirs
-    local output="$(shonenjump ${@})"
+    local output="$(shonenjump guess ${@})"
     if [[ -d "${output}" ]]; then
         case ${OSTYPE} in
             linux*)
@@ -83,7 +83,7 @@ jo() {
 # open shonenjump results (child directory) in file browser
 jco() {
     if [[ ${1} == -* ]] && [[ ${1} != "--" ]]; then
-        shonenjump ${@}
+        shonenjump guess ${@}
         return
     else
         jo $(pwd) ${@}

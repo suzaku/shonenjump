@@ -1,4 +1,4 @@
-package main
+package jump
 
 import (
 	"os"
@@ -11,7 +11,7 @@ import (
 
 type matcher func([]*entry, []string) []string
 
-func bestGuess(entries []*entry, args []string) string {
+func BestGuess(entries []*entry, args []string) string {
 	candidates := getCandidates(entries, args, 1)
 	if len(candidates) > 0 {
 		return candidates[0]
@@ -107,8 +107,8 @@ func getCandidates(entries []*entry, args []string, limit int) []string {
 			candidates = append(candidates, p)
 			seen[p] = true
 			if len(candidates) >= limit {
-									return candidates
-									}
+				return candidates
+			}
 		}
 	}
 	return candidates

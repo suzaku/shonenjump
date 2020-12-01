@@ -1,4 +1,4 @@
-package main
+package jump
 
 import (
 	"bufio"
@@ -101,7 +101,7 @@ func parseEntry(s string) (ent entry, err error) {
 	return ent, nil
 }
 
-func loadEntries(path string) entryList {
+func LoadEntries(path string) entryList {
 	var entries entryList
 	file, err := os.Open(path)
 	if err != nil {

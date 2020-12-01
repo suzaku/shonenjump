@@ -22,7 +22,7 @@ end
 # change pwd hook
 function __aj_add --on-variable PWD
     status --is-command-substitution; and return
-    shonenjump --add (pwd) >/dev/null 2>>$AUTOJUMP_ERROR_PATH &
+    shonenjump add (pwd) >/dev/null 2>>$AUTOJUMP_ERROR_PATH &
 end
 
 
@@ -36,9 +36,9 @@ end
 function j
     switch "$argv"
         case '-*' '--*'
-            shonenjump $argv
+            shonenjump guess $argv
         case '*'
-            set -l output (shonenjump $argv)
+            set -l output (shonenjump guess $argv)
             # Check for . and attempt a regular cd
             if test "$output" = "."
                 cd $argv
@@ -71,13 +71,13 @@ end
 
 # open shonenjump results in file browser
 function jo
-    set -l output (shonenjump $argv)
+    set -l output (shonenjump guess $argv)
     if test -d "$output"
         switch $OSTYPE
             case 'linux*'
-                xdg-open (shonenjump $argv)
+                xdg-open (shonenjump guess $argv)
             case 'darwin*'
-                open (shonenjump $argv)
+                open (shonenjump guess $argv)
             case cygwin
                 cygstart "" (cygpath -w -a (pwd))
             case '*'

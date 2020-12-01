@@ -1,4 +1,4 @@
-package main
+package jump
 
 import (
 	"os"
@@ -41,7 +41,7 @@ func TestParseCompleteOption(t *testing.T) {
 		{"abc__", "abc", 0, ""},
 	}
 	for _, test := range tests {
-		needle, index, path := parseCompleteOption(test.input)
+		needle, index, path := ParseCompleteOption(test.input)
 		if !(test.needle == needle && test.index == index && test.path == path) {
 			t.Errorf("Unexpected parse result for %s: (%s, %d, %s)", test.input, needle, index, path)
 		}
@@ -60,7 +60,7 @@ func TestClearNotExistDirs(t *testing.T) {
 		{"/tmp", 10},
 		{"/not-exist", 10},
 	}
-	result, changed := clearNotExistDirs(entries)
+	result, changed := ClearNotExistDirs(entries)
 	var output []string
 	for _, r := range result {
 		output = append(output, r.val)

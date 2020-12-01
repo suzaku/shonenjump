@@ -18,7 +18,7 @@ fi
 _shonenjump() {
         local cur
         cur=${COMP_WORDS[*]:1}
-        comps=$(shonenjump --complete $cur)
+        comps=$(shonenjump complete $cur)
         while read i; do
             COMPREPLY=("${COMPREPLY[@]}" "${i}")
         done <<EOF
@@ -31,9 +31,9 @@ complete -F _shonenjump j
 # change pwd hook
 shonenjump_add_to_database() {
     if [[ -f "${AUTOJUMP_ERROR_PATH}" ]]; then
-        (shonenjump --add "$(pwd)" >/dev/null 2>>${AUTOJUMP_ERROR_PATH} &) &>/dev/null
+        (shonenjump add "$(pwd)" >/dev/null 2>>${AUTOJUMP_ERROR_PATH} &) &>/dev/null
     else
-        (shonenjump --add "$(pwd)" >/dev/null &) &>/dev/null
+        (shonenjump add "$(pwd)" >/dev/null &) &>/dev/null
     fi
 }
 
@@ -49,11 +49,11 @@ esac
 # default shonenjump command
 j() {
     if [[ ${1} == -* ]] && [[ ${1} != "--" ]]; then
-        shonenjump ${@}
+        shonenjump guess ${@}
         return
     fi
 
-    output="$(shonenjump ${@})"
+    output="$(shonenjump guess ${@})"
     if [[ -d "${output}" ]]; then
 				if [ -t 1 ]; then  # if stdout is a terminal, use colors
 						echo -e "\\033[31m${output}\\033[0m"
@@ -73,7 +73,7 @@ j() {
 # jump to child directory (subdirectory of current path)
 jc() {
     if [[ ${1} == -* ]] && [[ ${1} != "--" ]]; then
-        shonenjump ${@}
+        shonenjump guess ${@}
         return
     else
         j $(pwd) ${@}
@@ -84,11 +84,11 @@ jc() {
 # open shonenjump results in file browser
 jo() {
     if [[ ${1} == -* ]] && [[ ${1} != "--" ]]; then
-        shonenjump ${@}
+        shonenjump guess ${@}
         return
     fi
 
-    output="$(shonenjump ${@})"
+    output="$(shonenjump guess ${@})"
     if [[ -d "${output}" ]]; then
         case ${OSTYPE} in
             linux*)
@@ -116,7 +116,7 @@ jo() {
 # open shonenjump results (child directory) in file browser
 jco() {
     if [[ ${1} == -* ]] && [[ ${1} != "--" ]]; then
-        shonenjump ${@}
+        shonenjump guess ${@}
         return
     else
         jo $(pwd) ${@}
