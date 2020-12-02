@@ -68,6 +68,9 @@ func (entries entryList) Save(path string) {
 
 	writer := bufio.NewWriter(tempfile)
 	for _, e := range entries {
+		if !isValidPath(e.val) {
+			continue
+		}
 		if _, err := writer.WriteString(e.String() + "\n"); err != nil {
 			log.Fatal(err)
 		}

@@ -4,38 +4,65 @@ import (
 	"bufio"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"testing"
 )
 
 func TestEntryListSave(t *testing.T) {
-	rawEntries := []*entry{
-		{"b", 10}, {"a", 20}, {"c", 15},
+	dir, err := ioutil.TempDir("", "test")
+	if err != nil {
+		t.Fatal(err)
 	}
+	defer os.RemoveAll(dir)
+
+	rawEntries := []*entry{
+		{filepath.Join(dir, "b"), 10},
+		{filepath.Join(dir, "a"), 20},
+		{filepath.Join(dir, "c"), 15},
+	}
+	for _, e := range rawEntries {
+		if err := os.MkdirAll(e.val, 0664); err != nil {
+			t.Fatal(err)
+		}
+	}
+	// Append a non-exist dir that should be ignored
+	rawEntries = append(rawEntries, &entry{val: "non-exist", score: 15})
 	entries := entryList(rawEntries)
 
-	entriesFile, _ := ioutil.TempFile("", "testEntries")
-	fileName := entriesFile.Name()
-	defer os.Remove(fileName)
+	fileName := filepath.Join(dir, "testEntries")
 
 	entries.Save(fileName)
 
 	entriesFile, err := os.Open(fileName)
 	if err != nil {
-		t.Error("Failed to read the saved entries file.", err)
+		t.Fatal(err)
 	}
 	scanner := bufio.NewScanner(entriesFile)
-	results := []string{}
+	var results []string
 	for scanner.Scan() {
 		line := scanner.Text()
 		results = append(results, line)
 	}
-	if len(results) != len(entries) {
+	if len(results) != len(entries)-1 {
 		t.Errorf("Incorrect number of entries saved: %q", results)
 	}
-	for i, e := range entries {
-		if results[i] != e.String() {
+	for i, r := range results {
+		if r != entries[i].String() {
 			t.Errorf("Entry %d saved incorrectly: %q", i, results[i])
 		}
+		if err := os.Remove(entries[i].val); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	entries.Save(fileName)
+
+	content, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(content) != 0 {
+		t.Errorf("Expected empty content, got: %v", string(content))
 	}
 }
 
