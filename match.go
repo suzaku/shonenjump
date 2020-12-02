@@ -93,7 +93,7 @@ var matchAnywhere = func(entries []*entry, args []string) []string {
 
 func getCandidates(entries []*entry, args []string, limit int) []string {
 	candidates := make([]string, 0, limit)
-	seen := make(map[string]bool)
+	seen := make(map[string]bool, limit)
 	matchers := []matcher{matchExactName, matchConsecutive, matchFuzzy, matchAnywhere}
 	for _, m := range matchers {
 		paths := m(entries, args)
@@ -104,8 +104,8 @@ func getCandidates(entries []*entry, args []string, limit int) []string {
 			candidates = append(candidates, p)
 			seen[p] = true
 			if len(candidates) >= limit {
-									return candidates
-									}
+				return candidates
+			}
 		}
 	}
 	return candidates
