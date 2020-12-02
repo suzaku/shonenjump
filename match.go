@@ -97,9 +97,6 @@ func getCandidates(entries []*entry, args []string, limit int) []string {
 	matchers := []matcher{matchExactName, matchConsecutive, matchFuzzy, matchAnywhere}
 	for _, m := range matchers {
 		paths := m(entries, args)
-		if len(paths) == 0 {
-			continue
-		}
 		for _, p := range paths {
 			if seen[p] || !isValidPath(p) {
 				continue
