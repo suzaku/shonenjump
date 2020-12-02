@@ -1,7 +1,7 @@
 # change pwd hook
 shonenjump_chpwd() {
-    if [[ -f "${AUTOJUMP_ERROR_PATH}" ]]; then
-        shonenjump --add "$(pwd)" >/dev/null 2>>${AUTOJUMP_ERROR_PATH} &!
+    if [[ -f "${SHONENJUMP_ERROR_PATH}" ]]; then
+        shonenjump --add "$(pwd)" >/dev/null 2>>${SHONENJUMP_ERROR_PATH} &!
     else
         shonenjump --add "$(pwd)" >/dev/null &!
     fi

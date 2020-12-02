@@ -1,4 +1,4 @@
-set -gx AUTOJUMP_SOURCED 1
+set -gx SHONENJUMP_SOURCED 1
 
 # Set ostype, if not set
 if not set -q OSTYPE
@@ -7,22 +7,22 @@ end
 
 # set error file location
 if test (uname) = "Darwin"
-    set -gx AUTOJUMP_ERROR_PATH ~/Library/shonenjump/errors.log
+    set -gx SHONENJUMP_ERROR_PATH ~/Library/shonenjump/errors.log
 else if test -d "$XDG_DATA_HOME"
-    set -gx AUTOJUMP_ERROR_PATH $XDG_DATA_HOME/shonenjump/errors.log
+    set -gx SHONENJUMP_ERROR_PATH $XDG_DATA_HOME/shonenjump/errors.log
 else
-    set -gx AUTOJUMP_ERROR_PATH ~/.local/share/shonenjump/errors.log
+    set -gx SHONENJUMP_ERROR_PATH ~/.local/share/shonenjump/errors.log
 end
 
-if test ! -d (dirname $AUTOJUMP_ERROR_PATH)
-    mkdir -p (dirname $AUTOJUMP_ERROR_PATH)
+if test ! -d (dirname $SHONENJUMP_ERROR_PATH)
+    mkdir -p (dirname $SHONENJUMP_ERROR_PATH)
 end
 
 
 # change pwd hook
 function __aj_add --on-variable PWD
     status --is-command-substitution; and return
-    shonenjump --add (pwd) >/dev/null 2>>$AUTOJUMP_ERROR_PATH &
+    shonenjump --add (pwd) >/dev/null 2>>$SHONENJUMP_ERROR_PATH &
 end
 
 
