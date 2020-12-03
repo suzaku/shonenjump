@@ -1,9 +1,9 @@
 # change pwd hook
 shonenjump_chpwd() {
     if [[ -f "${SHONENJUMP_ERROR_PATH}" ]]; then
-        shonenjump --add "$(pwd)" >/dev/null 2>>${SHONENJUMP_ERROR_PATH} &!
+        shonenjump --add "${PWD}" >/dev/null 2>>${SHONENJUMP_ERROR_PATH} &!
     else
-        shonenjump --add "$(pwd)" >/dev/null &!
+        shonenjump --add "${PWD}" >/dev/null &!
     fi
 }
 
@@ -42,7 +42,7 @@ jc() {
         shonenjump ${@}
         return
     else
-        j $(pwd) ${@}
+        j ${PWD} ${@}
     fi
 }
 
@@ -86,6 +86,6 @@ jco() {
         shonenjump ${@}
         return
     else
-        jo $(pwd) ${@}
+        jo ${PWD} ${@}
     fi
 }

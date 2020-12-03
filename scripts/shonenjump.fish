@@ -22,7 +22,7 @@ end
 # change pwd hook
 function __aj_add --on-variable PWD
     status --is-command-substitution; and return
-    shonenjump --add (pwd) >/dev/null 2>>$SHONENJUMP_ERROR_PATH &
+    shonenjump --add $PWD >/dev/null 2>>$SHONENJUMP_ERROR_PATH &
 end
 
 
@@ -64,7 +64,7 @@ function jc
         case '-*'
             j $argv
         case '*'
-            j (pwd) $argv
+            j $PWD $argv
     end
 end
 
@@ -79,7 +79,7 @@ function jo
             case 'darwin*'
                 open (shonenjump $argv)
             case cygwin
-                cygstart "" (cygpath -w -a (pwd))
+                cygstart "" (cygpath -w -a $PWD)
             case '*'
                 __aj_err "Unknown operating system: \"$OSTYPE\""
         end
@@ -97,6 +97,6 @@ function jco
         case '-*'
             j $argv
         case '*'
-            jo (pwd) $argv
+            jo $PWD $argv
     end
 end
