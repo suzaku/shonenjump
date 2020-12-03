@@ -109,13 +109,13 @@ func main() {
 			if path != "" {
 				fmt.Println(path)
 				return
-			} else if index != 0 {
+			}
+			if index != 0 {
 				path = getNCandidate([]string{needle}, index, ".")
 				fmt.Println(path)
 				return
-			} else {
-				args = []string{needle}
 			}
+			args = []string{needle}
 		}
 		entries := loadEntries(dataPath)
 		fmt.Println(bestGuess(entries, args))
