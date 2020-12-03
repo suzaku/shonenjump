@@ -1,4 +1,4 @@
-# Shonenjump ![build](https://github.com/suzaku/shonenjump/workflows/build/badge.svg) [![Go Report Card](https://goreportcard.com/badge/github.com/suzaku/shonenjump)](https://goreportcard.com/report/github.com/suzaku/shonenjump)
+# Shonenjump ![build](https://github.com/suzaku/shonenjump/workflows/build/badge.svg) [![Go Report Card](https://goreportcard.com/badge/github.com/suzaku/shonenjump)](https://goreportcard.com/report/github.com/suzaku/shonenjump) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/suzaku/shonenjump)
 
 shonenjump is a lightweight autojump clone written in Go.
 
@@ -19,10 +19,10 @@ Quote from the description of [autojump](https://github.com/wting/autojump/):
 Once you have `cd` into a directory, `shonenjump` will save it in a list.
 The next time you can use the `j` shortcut to visit it.
 
-For example, suppose that you have `cd` into a directory called `/usr/local/Very-Long-Dir-Name/Sub-Dir/target` after 
+For example, suppose that you have `cd` into a directory called `/usr/local/Very-Long-Dir-Name/Sub-Dir/target` after
 `shonenjump` is enabled. You can then use `j long` or `j target` or `j vldn` to visit it.
 
-Sometimes the first matched directory is not what you want, you can type `j <your key word>` and 
+Sometimes the first matched directory is not what you want, you can type `j <your key word>` and
 then type Tab to trigger auto completion and see the options.
 
 # Installation
@@ -37,7 +37,7 @@ then type Tab to trigger auto completion and see the options.
 1. [Download](https://github.com/suzaku/shonenjump/blob/master/scripts/) the setup script for your shell and include it in your shell profile.
 
    For example, if you are using `zsh`, you can do the following:
-    
+
    ```bash
    wget -O ~/.shonenjump.zsh https://raw.githubusercontent.com/suzaku/shonenjump/master/scripts/shonenjump.zsh
    echo '. $HOME/.shonenjump.zsh' >> ~/.zshrc
