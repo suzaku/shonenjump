@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	version            = "0.7.17"
+	version            = "0.7.18"
 	separator          = "__"
 	maxCompleteOptions = 9
 	defaultWeight      = 20.0
