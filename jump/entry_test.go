@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 )
 
@@ -186,23 +185,37 @@ func TestPreprocessPath(t *testing.T) {
 }
 
 func TestClearNotExistDirs(t *testing.T) {
-	orig := isValidPath
-	defer func() { isValidPath = orig }()
-	isValidPath = func(p string) bool {
-		return !strings.HasSuffix(p, "not-exist")
+	dir, err := ioutil.TempDir("", "test")
+	if err != nil {
+		t.Fatal(err)
 	}
-	entries := []*entry{
-		{"/foo/bar", 10},
-		{"/foo/not-exist", 10},
-		{"/tmp", 10},
-		{"/not-exist", 10},
+	cases := []struct {
+		basename string
+		create   bool
+	}{
+		{basename: "abc", create: true},
+		{basename: "bat", create: false},
+		{basename: "world", create: false},
+		{basename: "super", create: true},
+		{basename: "wrong", create: false},
+	}
+	var expected []string
+	var entries entryList
+	for _, c := range cases {
+		e := &entry{val: filepath.Join(dir, c.basename)}
+		if c.create {
+			if err := os.MkdirAll(e.val, 0644); err != nil {
+				log.Fatal(err)
+			}
+			expected = append(expected, e.val)
+		}
+		entries = append(entries, e)
 	}
 	result, changed := clearNotExistDirs(entries)
 	var output []string
 	for _, r := range result {
 		output = append(output, r.val)
 	}
-	expected := []string{"/foo/bar", "/tmp"}
 	assertItemsEqual(t, output, expected)
 	if !changed {
 		t.Error("Empty dirs get deleted, but changed is false.")
