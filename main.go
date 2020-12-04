@@ -27,15 +27,6 @@ func ensureDataPath() string {
 	return filepath.Join(dir, "shonenjump.txt")
 }
 
-func getNCandidate(args []string, index int, defaultPath string) string {
-	entries := loadEntries(ensureDataPath())
-	candidates := getCandidates(entries, args, index)
-	if len(candidates) == index {
-		return candidates[index-1]
-	}
-	return defaultPath
-}
-
 func parseCompleteOption(s string) (needle string, index int, path string) {
 	parts := strings.SplitN(s, separator, 3)
 	n := len(parts)
@@ -56,20 +47,6 @@ func parseCompleteOption(s string) (needle string, index int, path string) {
 	return
 }
 
-func clearNotExistDirs(entries entryList) (entryList, bool) {
-	var changed bool
-	var result entryList
-	for _, e := range entries {
-		if isValidPath(e.val) {
-			result = append(result, e)
-		} else {
-			log.Printf("Directory %s no longer exists", e.val)
-			changed = true
-		}
-	}
-	return result, changed
-}
-
 func main() {
 	pathToAdd := flag.String("add", "", "Add this path")
 	complete := flag.Bool("complete", false, "Used for tab completion")
@@ -78,8 +55,11 @@ func main() {
 	ver := flag.Bool("version", false, "Show version of shonenjump")
 	flag.Parse()
 	dataPath := ensureDataPath()
+	store := NewStore(dataPath)
 	if *pathToAdd != "" {
-		addPath(*pathToAdd)
+		if err := store.AddPath(*pathToAdd); err != nil {
+			log.Fatal(err)
+		}
 	} else if *complete {
 		args := flag.Args()
 		var arg string
@@ -88,15 +68,16 @@ func main() {
 		} else {
 			arg = ""
 		}
-		showAutoCompleteOptions(arg)
+		showAutoCompleteOptions(store, arg)
 	} else if *purge {
-		entries := loadEntries(dataPath)
-		entries, changed := clearNotExistDirs(entries)
-		if changed {
-			entries.Save(dataPath)
+		if err := store.Cleanup(); err != nil {
+			log.Fatal(err)
 		}
 	} else if *stat {
-		entries := loadEntries(dataPath)
+		entries, err := store.ReadEntries()
+		if err != nil {
+			log.Fatal(err)
+		}
 		for _, e := range entries {
 			fmt.Println(e)
 		}
@@ -111,13 +92,19 @@ func main() {
 				return
 			}
 			if index != 0 {
-				path = getNCandidate([]string{needle}, index, ".")
+				path, err := store.GetNthCandidate([]string{needle}, index, ".")
+				if err != nil {
+					log.Fatal(err)
+				}
 				fmt.Println(path)
 				return
 			}
 			args = []string{needle}
 		}
-		entries := loadEntries(dataPath)
+		entries, err := store.ReadEntries()
+		if err != nil {
+			log.Fatal(err)
+		}
 		fmt.Println(bestGuess(entries, args))
 	} else {
 		flag.Usage()
@@ -130,31 +117,23 @@ func preprocessPath(path string) (string, error) {
 	return filepath.Abs(path)
 }
 
-func addPath(pathToAdd string) {
-	path, err := preprocessPath(pathToAdd)
-	if err != nil {
-		log.Fatal(err)
-	}
-	if !isValidPath(path) {
-		return
-	}
-	oldEntries := loadEntries(ensureDataPath())
-	oldEntries.Age()
-	newEntries := oldEntries.Update(path, defaultWeight)
-	newEntries.Save(ensureDataPath())
-}
-
-func showAutoCompleteOptions(arg string) {
+func showAutoCompleteOptions(store Store, arg string) {
 	needle, index, path := parseCompleteOption(arg)
 	if path != "" {
 		fmt.Println(path)
 	} else if index != 0 {
-		path = getNCandidate([]string{needle}, index, "")
+		path, err := store.GetNthCandidate([]string{needle}, index, "")
+		if err != nil {
+			log.Fatal(err)
+		}
 		if path != "" {
 			fmt.Println(path)
 		}
 	} else {
-		entries := loadEntries(ensureDataPath())
+		entries, err := store.ReadEntries()
+		if err != nil {
+			log.Fatal(err)
+		}
 		candidates := getCandidates(entries, []string{needle}, maxCompleteOptions)
 		for i, path := range candidates {
 			parts := []string{needle, strconv.Itoa(i + 1), path}

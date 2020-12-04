@@ -13,6 +13,98 @@ import (
 	"strings"
 )
 
+type Store struct {
+	path string
+}
+
+func (s Store) AddPath(pathToAdd string) error {
+	path, err := preprocessPath(pathToAdd)
+	if err != nil {
+		return err
+	}
+	if !isValidPath(path) {
+		return fmt.Errorf("invalid path: %v", path)
+	}
+	oldEntries, err := s.ReadEntries()
+	if err != nil {
+		return err
+	}
+	oldEntries.Age()
+	newEntries := oldEntries.Update(path, defaultWeight)
+	return s.saveEntries(newEntries)
+}
+
+func (s Store) ReadEntries() (entryList, error) {
+	var entries entryList
+	file, err := os.Open(s.path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return entries, nil
+		}
+		return entries, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		entry, err := parseEntry(line)
+		if err != nil {
+			log.Printf("Failed to parse score from line: %v", line)
+			continue
+		}
+		entries = append(entries, &entry)
+	}
+	entries.Sort()
+	return entries, nil
+}
+
+func (s Store) Cleanup() error {
+	entries, err := s.ReadEntries()
+	if err != nil {
+		return err
+	}
+	entries, changed := clearNotExistDirs(entries)
+	if changed {
+		return entries.Save(s.path)
+	}
+	return nil
+}
+
+func (s Store) GetNthCandidate(args []string, index int, defaultPath string) (string, error) {
+	entries, err := s.ReadEntries()
+	if err != nil {
+		return "", err
+	}
+	candidates := getCandidates(entries, args, index)
+	if len(candidates) == index {
+		return candidates[index-1], nil
+	}
+	return defaultPath, nil
+}
+
+func (s Store) saveEntries(entries entryList) error {
+	return entries.Save(s.path)
+}
+
+func clearNotExistDirs(entries entryList) (result entryList, changed bool) {
+	for _, e := range entries {
+		if isValidPath(e.val) {
+			result = append(result, e)
+		} else {
+			log.Printf("Directory %s no longer exists", e.val)
+			changed = true
+		}
+	}
+	return result, changed
+}
+
+func NewStore(dataPath string) Store {
+	return Store{
+		path: dataPath,
+	}
+}
+
 // Entry correspond to a line in the data file
 type entry struct {
 	val   string
@@ -55,14 +147,14 @@ func (entries entryList) Update(val string, weight float64) entryList {
 	return entries
 }
 
-func (entries entryList) Save(path string) {
+func (entries entryList) Save(path string) error {
 	if err := os.MkdirAll(filepath.Dir(path), 0740); err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	tempfile, err := ioutil.TempFile(filepath.Dir(path), "shonenjump")
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer os.Remove(tempfile.Name())
 
@@ -72,18 +164,20 @@ func (entries entryList) Save(path string) {
 			continue
 		}
 		if _, err := writer.WriteString(e.String() + "\n"); err != nil {
-			log.Fatal(err)
+			return err
 		}
 	}
 	writer.Flush()
 
 	if err := tempfile.Close(); err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	if err = os.Rename(tempfile.Name(), path); err != nil {
-		log.Fatal(err)
+		return err
 	}
+
+	return nil
 }
 
 // As entries get older, their scores become lower.
@@ -102,29 +196,4 @@ func parseEntry(s string) (ent entry, err error) {
 	}
 	ent = entry{parts[1], score}
 	return ent, nil
-}
-
-func loadEntries(path string) entryList {
-	var entries entryList
-	file, err := os.Open(path)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return entries
-		}
-		log.Fatal(err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
-		entry, err := parseEntry(line)
-		if err != nil {
-			log.Printf("Failed to parse score from line: %v", line)
-			continue
-		}
-		entries = append(entries, &entry)
-	}
-	entries.Sort()
-	return entries
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"testing"
@@ -31,7 +32,9 @@ func TestEntryListSave(t *testing.T) {
 
 	fileName := filepath.Join(dir, "testEntries")
 
-	entries.Save(fileName)
+	if err := entries.Save(fileName); err != nil {
+		log.Fatal(err)
+	}
 
 	entriesFile, err := os.Open(fileName)
 	if err != nil {
@@ -55,7 +58,9 @@ func TestEntryListSave(t *testing.T) {
 		}
 	}
 
-	entries.Save(fileName)
+	if err := entries.Save(fileName); err != nil {
+		log.Fatal(err)
+	}
 
 	content, err := ioutil.ReadFile(fileName)
 	if err != nil {
@@ -142,7 +147,11 @@ func TestLoadEntries(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		entries := loadEntries(f.Name())
+		store := NewStore(f.Name())
+		entries, err := store.ReadEntries()
+		if err != nil {
+			t.Fatal(err)
+		}
 		if len(entries) != 3 {
 			t.Errorf("Expect 3 entries, got: %v ", entries)
 		}
