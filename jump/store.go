@@ -55,7 +55,9 @@ func (s Store) ReadEntries() (entryList, error) {
 		}
 		entries = append(entries, &entry)
 	}
-	entries.Sort()
+	if entries != nil {
+		entries.Sort()
+	}
 	return entries, nil
 }
 
