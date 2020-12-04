@@ -130,3 +130,26 @@ func TestUpdateEntryScore(t *testing.T) {
 		t.Errorf("Entity score is wrong: %f", e.score)
 	}
 }
+
+func TestLoadEntries(t *testing.T) {
+	t.Run("Should make sure the entries are sorted by score", func(t *testing.T) {
+		f, err := ioutil.TempFile("", "entries")
+		if err != nil {
+			t.Fatal(err)
+		}
+		content := []byte("20\t/a\n22\t/a/b\n12.5\t/c\n")
+		err = ioutil.WriteFile(f.Name(), content, 0666)
+		if err != nil {
+			t.Fatal(err)
+		}
+		entries := loadEntries(f.Name())
+		if len(entries) != 3 {
+			t.Errorf("Expect 3 entries, got: %v ", entries)
+		}
+		paths := make([]string, len(entries))
+		for i, e := range entries {
+			paths[i] = e.val
+		}
+		assertItemsEqual(t, paths, []string{"/a/b", "/a", "/c"})
+	})
+}
