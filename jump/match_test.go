@@ -1,4 +1,4 @@
-package main
+package jump
 
 import "testing"
 
@@ -12,8 +12,12 @@ func BenchmarkGetCandidates(b *testing.B) {
 
 	b.ResetTimer()
 
+	var candidates []string
 	for i := 0; i < b.N; i++ {
-		getCandidates(entries, []string{"foo", "bar"}, maxCompleteOptions)
+		candidates = GetCandidates(entries, []string{"foo", "bar"}, MaxCompleteOptions)
+	}
+	if len(candidates) == 0 {
+		b.Fail()
 	}
 }
 
@@ -50,7 +54,7 @@ func TestGetCandidatesShouldRemoveDuplication(t *testing.T) {
 	}()
 
 	entries := []*entry{{"path1", 10}}
-	result := getCandidates(entries, []string{"foo"}, 4)
+	result := GetCandidates(entries, []string{"foo"}, 4)
 	expected := []string{"path1", "path2"}
 	assertItemsEqual(t, result, expected)
 }
@@ -73,7 +77,7 @@ func TestGetCandidates(t *testing.T) {
 		entries = append(entries, &entry{p, 1.0})
 	}
 
-	result := getCandidates(entries, []string{"foo", "bar"}, 2)
+	result := GetCandidates(entries, []string{"foo", "bar"}, 2)
 	expected := []string{
 		"/foo/bazar",
 		"/foo/bar/baz",

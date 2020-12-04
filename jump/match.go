@@ -1,4 +1,4 @@
-package main
+package jump
 
 import (
 	"os"
@@ -9,10 +9,14 @@ import (
 	"unicode/utf8"
 )
 
+const (
+	MaxCompleteOptions = 9
+)
+
 type matcher func([]*entry, []string) []string
 
-func bestGuess(entries []*entry, args []string) string {
-	candidates := getCandidates(entries, args, 1)
+func BestGuess(entries []*entry, args []string) string {
+	candidates := GetCandidates(entries, args, 1)
 	if len(candidates) > 0 {
 		return candidates[0]
 	}
@@ -91,7 +95,7 @@ var matchAnywhere = func(entries []*entry, args []string) []string {
 	return matches
 }
 
-func getCandidates(entries []*entry, args []string, limit int) []string {
+func GetCandidates(entries []*entry, args []string, limit int) []string {
 	candidates := make([]string, 0, limit)
 	seen := make(map[string]bool, limit)
 	matchers := []matcher{matchExactName, matchConsecutive, matchFuzzy, matchAnywhere}

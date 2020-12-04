@@ -1,4 +1,4 @@
-package main
+package jump
 
 import (
 	"bufio"
@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -161,4 +162,49 @@ func TestLoadEntries(t *testing.T) {
 		}
 		assertItemsEqual(t, paths, []string{"/a/b", "/a", "/c"})
 	})
+}
+
+func TestPreprocessPath(t *testing.T) {
+	path, err := preprocessPath("/abc/")
+	if err != nil {
+		t.Error(err)
+	}
+	if path != "/abc" {
+		t.Errorf("Trailing slash is not removed in path: %s", path)
+	}
+	path, err = preprocessPath("abc")
+	if err != nil {
+		t.Error(err)
+	}
+	pwd, err := os.Getwd()
+	if err != nil {
+		t.Error(err)
+	}
+	if path != filepath.Join(pwd, "abc") {
+		t.Errorf("Relative path not converted to absolute path: %s", path)
+	}
+}
+
+func TestClearNotExistDirs(t *testing.T) {
+	orig := isValidPath
+	defer func() { isValidPath = orig }()
+	isValidPath = func(p string) bool {
+		return !strings.HasSuffix(p, "not-exist")
+	}
+	entries := []*entry{
+		{"/foo/bar", 10},
+		{"/foo/not-exist", 10},
+		{"/tmp", 10},
+		{"/not-exist", 10},
+	}
+	result, changed := clearNotExistDirs(entries)
+	var output []string
+	for _, r := range result {
+		output = append(output, r.val)
+	}
+	expected := []string{"/foo/bar", "/tmp"}
+	assertItemsEqual(t, output, expected)
+	if !changed {
+		t.Error("Empty dirs get deleted, but changed is false.")
+	}
 }

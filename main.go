@@ -9,13 +9,13 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/suzaku/shonenjump/jump"
 )
 
 const (
-	version            = "0.7.18"
-	separator          = "__"
-	maxCompleteOptions = 9
-	defaultWeight      = 20.0
+	version   = "0.7.18"
+	separator = "__"
 )
 
 func ensureDataPath() string {
@@ -55,7 +55,7 @@ func main() {
 	ver := flag.Bool("version", false, "Show version of shonenjump")
 	flag.Parse()
 	dataPath := ensureDataPath()
-	store := NewStore(dataPath)
+	store := jump.NewStore(dataPath)
 	if *pathToAdd != "" {
 		if err := store.AddPath(*pathToAdd); err != nil {
 			log.Fatal(err)
@@ -105,19 +105,13 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(bestGuess(entries, args))
+		fmt.Println(jump.BestGuess(entries, args))
 	} else {
 		flag.Usage()
 	}
 }
 
-func preprocessPath(path string) (string, error) {
-	// normalize the input
-	path = strings.TrimSuffix(path, string(os.PathSeparator))
-	return filepath.Abs(path)
-}
-
-func showAutoCompleteOptions(store Store, arg string) {
+func showAutoCompleteOptions(store jump.Store, arg string) {
 	needle, index, path := parseCompleteOption(arg)
 	if path != "" {
 		fmt.Println(path)
@@ -134,7 +128,7 @@ func showAutoCompleteOptions(store Store, arg string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		candidates := getCandidates(entries, []string{needle}, maxCompleteOptions)
+		candidates := jump.GetCandidates(entries, []string{needle}, jump.MaxCompleteOptions)
 		for i, path := range candidates {
 			parts := []string{needle, strconv.Itoa(i + 1), path}
 			fmt.Println(strings.Join(parts, separator))
