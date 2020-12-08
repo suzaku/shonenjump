@@ -22,8 +22,12 @@ const (
 )
 
 func ensureDataPath() string {
-	usr, _ := user.Current()
-	dir := filepath.Join(usr.HomeDir, ".local/share/shonenjump")
+	dir := os.Getenv("XDG_DATA_HOME")
+	if dir == "" {
+		usr, _ := user.Current()
+		dir = filepath.Join(usr.HomeDir, ".local/share")
+	}
+	dir = filepath.Join(dir, "shonenjump")
 	if err := os.MkdirAll(dir, 0740); err != nil {
 		panic(err)
 	}
