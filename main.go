@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	version   = "0.7.18"
+	version   = "0.7.19"
 	separator = "__"
 )
 
