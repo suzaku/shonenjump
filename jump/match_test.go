@@ -1,6 +1,10 @@
 package jump
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func BenchmarkGetCandidates(b *testing.B) {
 	orig := isValidPath
@@ -16,9 +20,7 @@ func BenchmarkGetCandidates(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		candidates = GetCandidates(entries, []string{"foo", "bar"}, MaxCompleteOptions)
 	}
-	if len(candidates) == 0 {
-		b.Fail()
-	}
+	assert.Empty(b, candidates)
 }
 
 func generateEntries() []*entry {
@@ -56,7 +58,7 @@ func TestGetCandidatesShouldRemoveDuplication(t *testing.T) {
 	entries := []*entry{{"path1", 10}}
 	result := GetCandidates(entries, []string{"foo"}, 4)
 	expected := []string{"path1", "path2"}
-	assertItemsEqual(t, result, expected)
+	assert.Equal(t, expected, result, "Incorrect candidates")
 }
 
 func TestGetCandidates(t *testing.T) {
@@ -82,7 +84,7 @@ func TestGetCandidates(t *testing.T) {
 		"/foo/bazar",
 		"/foo/bar/baz",
 	}
-	assertItemsEqual(t, result, expected)
+	assert.Equal(t, expected, result, "Incorrect candidates")
 }
 
 func TestAnywhere(t *testing.T) {
@@ -98,7 +100,7 @@ func TestAnywhere(t *testing.T) {
 		"/foo/bazar",
 		"/foo/gxxbazabc",
 	}
-	assertItemsEqual(t, result, expected)
+	assert.Equal(t, expected, result, "Incorrect candidates")
 }
 
 func TestExactName(t *testing.T) {
@@ -111,11 +113,11 @@ func TestExactName(t *testing.T) {
 	}
 	t.Run("Should returns empty result if the number of args is not exactly one", func(t *testing.T) {
 		result := matchExactName(entries, []string{"tidb", "baz"})
-		assertItemsEqual(t, result, []string{})
+		assert.Empty(t, result)
 	})
 	t.Run("Should only match last part of name", func(t *testing.T) {
 		result := matchExactName(entries, []string{"tidb"})
-		assertItemsEqual(t, result, []string{"/app/open/tidb"})
+		assert.Equal(t, []string{"/app/open/tidb"}, result)
 	})
 }
 
@@ -131,7 +133,7 @@ func TestFuzzy(t *testing.T) {
 		"/foo/bar/baz",
 		"/foo/bazar",
 	}
-	assertItemsEqual(t, result, expected)
+	assert.Equal(t, expected, result)
 }
 
 func TestConsecutive(t *testing.T) {
@@ -148,18 +150,7 @@ func TestConsecutive(t *testing.T) {
 		"/foo/bazar",
 		"/foo/xxbaz",
 	}
-	assertItemsEqual(t, result, expected)
-}
-
-func assertItemsEqual(t *testing.T, result []string, expected []string) {
-	if len(result) != len(expected) {
-		t.Errorf("Expected %v, got %v", expected, result)
-	}
-	for i, r := range result {
-		if expected[i] != r {
-			t.Errorf("Got unexpected element in index %d: %v", i, r)
-		}
-	}
+	assert.Equal(t, expected, result)
 }
 
 func TestCalculateDiff(t *testing.T) {
@@ -195,9 +186,8 @@ func TestCalculateDiff(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := calculateDiff(tt.args.source, tt.args.target); got != tt.want {
-				t.Errorf("calculateDiff() = %v, want %v", got, tt.want)
-			}
+			got := calculateDiff(tt.args.source, tt.args.target)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

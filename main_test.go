@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestParseCompleteOption(t *testing.T) {
@@ -18,8 +20,8 @@ func TestParseCompleteOption(t *testing.T) {
 	}
 	for _, test := range tests {
 		needle, index, path := parseCompleteOption(test.input)
-		if !(test.needle == needle && test.index == index && test.path == path) {
-			t.Errorf("Unexpected parse result for %s: (%s, %d, %s)", test.input, needle, index, path)
-		}
+		assert.Equal(t, test.needle, needle)
+		assert.Equal(t, test.index, index)
+		assert.Equal(t, test.path, path)
 	}
 }
