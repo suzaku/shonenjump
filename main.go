@@ -72,8 +72,6 @@ func main() {
 		var arg string
 		if len(args) > 0 {
 			arg = args[0]
-		} else {
-			arg = ""
 		}
 		showAutoCompleteOptions(store, arg)
 	} else if *purge {
