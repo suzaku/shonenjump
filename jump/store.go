@@ -34,8 +34,8 @@ func (s Store) AddPath(pathToAdd string) error {
 	return s.saveEntries(newEntries)
 }
 
-func (s Store) ReadEntries() (entryList, error) {
-	var entries entryList
+func (s Store) ReadEntries() (EntryList, error) {
+	var entries EntryList
 	file, err := os.Open(s.path)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -85,6 +85,6 @@ func (s Store) GetNthCandidate(args []string, index int, defaultPath string) (st
 	return defaultPath, nil
 }
 
-func (s Store) saveEntries(entries entryList) error {
+func (s Store) saveEntries(entries EntryList) error {
 	return entries.Save(s.path)
 }

@@ -17,7 +17,7 @@ const (
 	defaultWeight = 20.0
 )
 
-func clearNotExistDirs(entries entryList) (result entryList, changed bool) {
+func clearNotExistDirs(entries EntryList) (result EntryList, changed bool) {
 	for _, e := range entries {
 		if isValidPath(e.val) {
 			result = append(result, e)
@@ -44,15 +44,15 @@ func (e entry) String() string {
 	return fmt.Sprintf("%.2f\t%s", e.score, e.val)
 }
 
-type entryList []*entry
+type EntryList []*entry
 
-func (entries entryList) Sort() {
+func (entries EntryList) Sort() {
 	sort.Slice(entries, func(i, j int) bool {
 		return entries[i].score > entries[j].score
 	})
 }
 
-func (entries entryList) Update(val string, weight float64) entryList {
+func (entries EntryList) Update(val string, weight float64) EntryList {
 	var ent *entry
 	for _, e := range entries {
 		if e.val == val {
@@ -71,7 +71,7 @@ func (entries entryList) Update(val string, weight float64) entryList {
 	return entries
 }
 
-func (entries entryList) Save(path string) error {
+func (entries EntryList) Save(path string) error {
 	if err := os.MkdirAll(filepath.Dir(path), 0740); err != nil {
 		return err
 	}
@@ -105,7 +105,7 @@ func (entries entryList) Save(path string) error {
 }
 
 // As entries get older, their scores become lower.
-func (entries entryList) Age() {
+func (entries EntryList) Age() {
 	for _, e := range entries {
 		delta := math.Ceil(e.score / 10)
 		e.score = math.Max(e.score-delta, 0)

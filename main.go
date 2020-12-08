@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"os/user"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/mattn/go-isatty"
 
 	"github.com/suzaku/shonenjump/jump"
 )
@@ -78,9 +81,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		for _, e := range entries {
-			fmt.Println(e)
-		}
+		printEntries(entries)
 	} else if *ver {
 		fmt.Println(version)
 	} else if flag.NArg() > 0 {
@@ -109,6 +110,39 @@ func main() {
 	} else {
 		flag.Usage()
 	}
+}
+
+func printEntries(entries jump.EntryList) {
+	stdout := os.Stdout
+	isTTY := isatty.IsTerminal(stdout.Fd()) || isatty.IsCygwinTerminal(stdout.Fd())
+	if !isTTY {
+		for _, e := range entries {
+			fmt.Println(e)
+		}
+		return
+	}
+	pagerPath := os.Getenv("PAGER")
+	cmd := exec.Command(pagerPath)
+	writer, err := cmd.StdinPipe()
+	if err != nil {
+		log.Fatal(err)
+	}
+	cmd.Stdout = stdout
+
+	writeComplete := make(chan struct{})
+	go func() {
+		defer writer.Close()
+		defer close(writeComplete)
+		for _, e := range entries {
+			fmt.Fprintln(writer, e)
+		}
+	}()
+
+	if err := cmd.Run(); err != nil {
+		log.Fatal(err)
+	}
+
+	<-writeComplete
 }
 
 func showAutoCompleteOptions(store jump.Store, arg string) {

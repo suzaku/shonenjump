@@ -28,7 +28,7 @@ func TestEntryListSave(t *testing.T) {
 	}
 	// Append a non-exist dir that should be ignored
 	rawEntries = append(rawEntries, &entry{val: "non-exist", score: 15})
-	entries := entryList(rawEntries)
+	entries := EntryList(rawEntries)
 
 	fileName := filepath.Join(dir, "testEntries")
 
@@ -67,7 +67,7 @@ func TestEntryListSort(t *testing.T) {
 		{"a", 20},
 		{"c", 15},
 	}
-	entries := entryList(rawEntries)
+	entries := EntryList(rawEntries)
 	entries.Sort()
 	expected := []string{"a", "c", "b"}
 	for i, e := range entries {
@@ -76,7 +76,7 @@ func TestEntryListSort(t *testing.T) {
 }
 
 func TestEntryListUpdate(t *testing.T) {
-	entries := entryList{
+	entries := EntryList{
 		&entry{"/path_b", 10},
 		&entry{"/path_a", 0},
 	}
@@ -89,7 +89,7 @@ func TestEntryListUpdate(t *testing.T) {
 }
 
 func TestEntryListAge(t *testing.T) {
-	entries := entryList{
+	entries := EntryList{
 		&entry{"a", 20},
 		&entry{"b", 10},
 		&entry{"c", 0},
@@ -162,7 +162,7 @@ func TestClearNotExistDirs(t *testing.T) {
 		{basename: "wrong", create: false},
 	}
 	var expected []string
-	var entries entryList
+	var entries EntryList
 	for _, c := range cases {
 		e := &entry{val: filepath.Join(dir, c.basename)}
 		if c.create {
