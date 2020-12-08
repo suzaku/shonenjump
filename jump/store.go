@@ -3,8 +3,10 @@ package jump
 import (
 	"bufio"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 type Store struct {
@@ -68,7 +70,7 @@ func (s Store) Cleanup() error {
 	}
 	entries, changed := clearNotExistDirs(entries)
 	if changed {
-		return entries.Save(s.path)
+		return s.saveEntries(entries)
 	}
 	return nil
 }
@@ -86,5 +88,37 @@ func (s Store) GetNthCandidate(args []string, index int, defaultPath string) (st
 }
 
 func (s Store) saveEntries(entries EntryList) error {
-	return entries.Save(s.path)
+	folder := filepath.Dir(s.path)
+	if err := os.MkdirAll(folder, 0740); err != nil {
+		return err
+	}
+
+	tempfile, err := ioutil.TempFile(folder, "shonenjump")
+	if err != nil {
+		return err
+	}
+	defer os.Remove(tempfile.Name())
+
+	writer := bufio.NewWriter(tempfile)
+	for _, e := range entries {
+		if !isValidPath(e.val) {
+			continue
+		}
+		if _, err := fmt.Fprintln(writer, e); err != nil {
+			return err
+		}
+	}
+	if err := writer.Flush(); err != nil {
+		return err
+	}
+
+	if err := tempfile.Close(); err != nil {
+		return err
+	}
+
+	if err = os.Rename(tempfile.Name(), s.path); err != nil {
+		return err
+	}
+
+	return nil
 }

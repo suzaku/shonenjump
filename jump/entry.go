@@ -1,9 +1,7 @@
 package jump
 
 import (
-	"bufio"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"math"
 	"os"
@@ -69,39 +67,6 @@ func (entries EntryList) Update(val string, weight float64) EntryList {
 	entries.Sort()
 
 	return entries
-}
-
-func (entries EntryList) Save(path string) error {
-	if err := os.MkdirAll(filepath.Dir(path), 0740); err != nil {
-		return err
-	}
-
-	tempfile, err := ioutil.TempFile(filepath.Dir(path), "shonenjump")
-	if err != nil {
-		return err
-	}
-	defer os.Remove(tempfile.Name())
-
-	writer := bufio.NewWriter(tempfile)
-	for _, e := range entries {
-		if !isValidPath(e.val) {
-			continue
-		}
-		if _, err := writer.WriteString(e.String() + "\n"); err != nil {
-			return err
-		}
-	}
-	writer.Flush()
-
-	if err := tempfile.Close(); err != nil {
-		return err
-	}
-
-	if err = os.Rename(tempfile.Name(), path); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 // As entries get older, their scores become lower.
