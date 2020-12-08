@@ -163,9 +163,15 @@ func showAutoCompleteOptions(store jump.Store, arg string) {
 			log.Fatal(err)
 		}
 		candidates := jump.GetCandidates(entries, []string{needle}, jump.MaxCompleteOptions)
+		var sb strings.Builder
 		for i, path := range candidates {
-			parts := []string{needle, strconv.Itoa(i + 1), path}
-			fmt.Println(strings.Join(parts, separator))
+			sb.Reset()
+			sb.WriteString(needle)
+			sb.WriteString(separator)
+			sb.WriteString(strconv.Itoa(i + 1))
+			sb.WriteString(separator)
+			sb.WriteString(path)
+			fmt.Println(sb.String())
 		}
 	}
 }
