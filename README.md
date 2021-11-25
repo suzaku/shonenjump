@@ -33,8 +33,16 @@ then type Tab to trigger auto completion and see the options.
 
 ## Linux
 
+### Arch Linux
+
+Arch Linux user can build/install from the [AUR](https://aur.archlinux.org/packages/shonenjump/).
+
+### Other distros
+
+Users of other distros can follow these steps:
+
 1. [Download](https://github.com/suzaku/shonenjump/releases) the shonenjump binary for your platform, place it in a directory in your `$PATH`.
-1. [Download](https://github.com/suzaku/shonenjump/blob/master/scripts/) the setup script for your shell and include it in your shell profile.
+2. [Download](https://github.com/suzaku/shonenjump/blob/master/scripts/) the setup script for your shell and include it in your shell profile.
 
    For example, if you are using `zsh`, you can do the following:
 
@@ -43,7 +51,7 @@ then type Tab to trigger auto completion and see the options.
    echo '. $HOME/.shonenjump.zsh' >> ~/.zshrc
     ```
 
-1. If you are using `zsh`, you'll need an extra step to setup tab completion.
+3. If you are using `zsh`, you'll need an extra step to setup tab completion.
 
    You need to place a script into the `zsh/site-functions` directory:
    ```bash
