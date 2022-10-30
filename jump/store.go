@@ -3,7 +3,6 @@ package jump
 import (
 	"bufio"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -93,7 +92,7 @@ func (s Store) saveEntries(entries EntryList) error {
 		return err
 	}
 
-	tempfile, err := ioutil.TempFile(folder, "shonenjump")
+	tempfile, err := os.CreateTemp(folder, "shonenjump")
 	if err != nil {
 		return err
 	}
