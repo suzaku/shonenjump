@@ -2,7 +2,6 @@ package jump
 
 import (
 	"bufio"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -11,7 +10,7 @@ import (
 )
 
 func TestSaveEntries(t *testing.T) {
-	dir, err := ioutil.TempDir("", "test")
+	dir, err := os.MkdirTemp("", "test")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -56,7 +55,7 @@ func TestSaveEntries(t *testing.T) {
 	err = store.saveEntries(entries)
 	assert.Nil(t, err)
 
-	content, err := ioutil.ReadFile(fileName)
+	content, err := os.ReadFile(fileName)
 	assert.Nil(t, err)
 
 	assert.Empty(t, content)

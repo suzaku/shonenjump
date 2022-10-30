@@ -1,7 +1,6 @@
 package jump
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -65,11 +64,11 @@ func TestUpdateEntryScore(t *testing.T) {
 
 func TestLoadEntries(t *testing.T) {
 	t.Run("Should make sure the entries are sorted by score", func(t *testing.T) {
-		f, err := ioutil.TempFile("", "entries")
+		f, err := os.CreateTemp("", "entries")
 		assert.Nil(t, err)
 
 		content := []byte("20\t/a\n22\t/a/b\n12.5\t/c\n")
-		err = ioutil.WriteFile(f.Name(), content, 0666)
+		err = os.WriteFile(f.Name(), content, 0666)
 		assert.Nil(t, err)
 
 		store := NewStore(f.Name())
@@ -97,7 +96,7 @@ func TestPreprocessPath(t *testing.T) {
 }
 
 func TestClearNotExistDirs(t *testing.T) {
-	dir, err := ioutil.TempDir("", "test")
+	dir, err := os.MkdirTemp("", "test")
 	assert.Nil(t, err)
 	cases := []struct {
 		basename string
