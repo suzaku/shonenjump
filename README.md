@@ -2,10 +2,6 @@
 
 shonenjump is a lightweight autojump clone written in Go.
 
-
-![Visualization of the codebase](./diagram.svg)
-
-
 # What does it do?
 
 Quote from the description of [autojump](https://github.com/wting/autojump/):
