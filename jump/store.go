@@ -62,6 +62,31 @@ func (s Store) ReadEntries() (EntryList, error) {
 	return entries, nil
 }
 
+func (s Store) topEntry() (entry, error) {
+	var ent entry
+
+	file, err := os.Open(s.path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return ent, nil
+		}
+		return ent, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		ent, err := parseEntry(line)
+		if err != nil {
+			log.Printf("Failed to parse score from line: %v", line)
+			continue
+		}
+		return ent, nil
+	}
+	return ent, nil
+}
+
 func (s Store) Cleanup() error {
 	entries, err := s.ReadEntries()
 	if err != nil {
@@ -84,6 +109,14 @@ func (s Store) GetNthCandidate(args []string, index int, defaultPath string) (st
 		return candidates[index-1], nil
 	}
 	return defaultPath, nil
+}
+
+func (s Store) GetTopPath(defaultPath string) (string, error) {
+	ent, err := s.topEntry()
+	if err != nil {
+		return "", err
+	}
+	return ent.val, nil
 }
 
 func (s Store) saveEntries(entries EntryList) error {

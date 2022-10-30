@@ -110,7 +110,11 @@ func main() {
 		}
 		fmt.Println(jump.BestGuess(entries, args))
 	} else {
-		flag.Usage()
+		path, err := store.GetTopPath(".")
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(path)
 	}
 }
 
