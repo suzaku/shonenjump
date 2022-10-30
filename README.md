@@ -54,3 +54,14 @@ Users of other distros can follow these steps:
    cd <Your Zsh Site-functions Dir>
    wget https://raw.githubusercontent.com/suzaku/shonenjump/master/scripts/_j
    ```
+# Importing a database from Autojump (optional)
+
+Shonenjump keeps its database of visited directories as a flat text file as does autojump.  Users can simply copy `autojump.txt` to `shonenjump.txt` to use it.
+
+The default path varies according to your system:
+
+| OS      | Path                                                                                 | Example                                                |
+| ------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------ |
+| Linux   | `$XDG_DATA_HOME/autojump/autojump.txt` or `$HOME/.local/share/autojump/autojump.txt` | `/home/foo/.local/share/autojump/autojump.txt`       |
+| macOS   | `$HOME/Library/autojump/autojump.txt`                                                | `/Users/Foo/Library/autojump/autojump.txt`           |
+| Windows | `%APPDATA%\autojump\autojump.txt`                                                    | `C:\Users\Foo\AppData\Roaming\autojump\autojump.txt` |
